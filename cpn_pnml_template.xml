@@ -1,0 +1,117 @@
+<xml version="1.0">
+    <pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+        <net>
+            <!--oneormore-->
+            <page>
+            <!--oneormore-->
+            <place id=" ">
+                <name>
+                    <text></text>
+                </name>
+                <type>
+                    <text></text>
+                    <!--optional-->
+                    <structure>
+                        Sort
+                    </structure>
+                </type>
+                <!--如果hlinitialMarking没有的话，则默认为1-->
+                <hlinitialMarking>
+                    <text></text>
+                    <structure>
+                        Term
+                    </structure>
+                </hlinitialMarking>
+            </place>
+
+            <!--oneormore-->
+            <transition>
+
+            </transition>
+            </page>
+            <declaration>   <!--A declaration is part of a group of declarations. It defines known concrete declarations -->
+                <!--interleave-->
+                <text></text>
+                <structure>
+                    <declarations>     <!--A core signature starts by zero or more declarations-->
+                        <!--zerormore-->
+                        <namedsort id=" " name=" ">
+                            Sort
+                            <!--                        <cyclicenumeration>-->
+                            <!--                            &lt;!&ndash;onermore&ndash;&gt;-->
+                            <!--                            <feconstant id=" " name=" ">-->
+                            <!--                            </feconstant>-->
+                            <!--                        </cyclicenumeration>-->
+                        </namedsort>
+                        <!--zerormore-->
+                        <variabledecl id=" " name=" ">
+                            <!--choice-->
+
+                            <!--ref name="BuiltInSort"-->
+                            <!--choice-->
+                            <dot/>
+                            <cyclicenumeration/>
+
+                            <!-- ref name="MultisetSort" -->
+                            <multisetsort>
+                            </multisetsort>
+
+                            <!--ref name="ProductSort"-->
+                            <productsort>
+                                <!--zerormore-->
+                                <usersort declaration=" "></usersort>
+                            </productsort>
+
+                            <!--ref name="UserSort"-->
+                            <usersort declaration=" "></usersort>   <!--A user sort is used as an abbreviation of existing users-declared sort. It thus refers to a SortDeclaration.-->
+                        </variabledecl>
+
+                    </declarations>
+                </structure>
+            </declaration>
+        </net>
+    </pnml>
+</xml>
+
+ <!-- Declarations -> declarations |- {Declaration};
+ Declaration -> SortDeclaration | VariableDeclaration | OperatorDeclaration;
+ Declaration.content -> <id,name>;
+ SortDeclaration -> NamedSort;
+ SortDeclaration.content -> Declaration.content;
+ NamedSort -> namedsort |- (SortDeclaration.content || Sort);
+ VariableDeclaration -> variabledecl |- {Declaration.content || Sort};
+ OperatorDeclaration -> NamedOperator;
+ OperatorDeclaration.content -> Declaration.content;
+ NamedOperator -> namedoperator |- (OperatorDeclaration.content || (parameter |- {VariableDeclaration}) || (def |- Term));
+ Term -> Variable | Operator;
+ Variable -> variable<refvariable>;
+ Sort -> BuiltInSort | MultisetSort | ProductSort | UserSort;
+ BuiltInSort -> Dot | CyclicEnumeration | FiniteEnumeration
+ Dot -> dot;
+ CyclicEnumeration -> cyclicenumeration |- FiniteEnumeration.content;
+ CyclicEnumOperator.content -> BuiltInOperator.content;
+ FiniteEnumeration -> finiteenumeration |- FiniteEnumeration.content;
+ FiniteEnumeration.content -> {FEConstant};
+ MultisetSort -> multisetsort |- Sort;
+ ProductSort -> productsort |- Sort;
+ UserSort -> usersort<declaration>;
+ Operator ->BuiltInOperator | BuiltInConstant | MultisetOperator | Tuple | UserOperator;
+ Operator.content -> {subterm |- Term};
+ BuiltInOperator-> Cardinality | CardinalityOf | Contains;
+ Cardinality -> cardinality | BuiltInOperator.content;
+ CardinalityOf -> cardinality | BuiltInOperator.content;
+ Contains -> BuiltInOperator.content;
+ BuiltInOperator.content -> Operator.content;
+ BuiltInConstant -> DotConstant | FEConstant;
+ DotConstant -> dotconstant;
+ FEConstant -> feconstant |- OperatorDeclaration.content;
+ BuiltInConstant.content -> Operator.content;
+ MultisetOperator-> Add | All | NumberOf | Substract | ScalarProduct | Empty;
+ Add -> add |- MultisetOperator.content;
+ Substract -> substract |- MultisetOperator.content;
+ Empty -> empty |- (MultisetOperator.content || Sort);
+ ScalarProduct -> scalarproduct |- MultisetOperator.content;
+ NumberOf -> numberof |- MultisetOperator.content;
+ MultisetOperator.content -> Operator.content;
+ Tuple->tuple |- Operator.content ;
+ UserOperator-> -->

@@ -1,0 +1,15 @@
+USERSORT:
+name: weight
+constants: (Weight0,Weight1,)
+------------------------
+name: Speed
+constants: (Speed1,Speed2,Speed3,Speed4,Speed5,Speed6,Speed7,Speed8,Speed9,Speed10,)
+------------------------
+name: Altitude
+constants: (Altitude1,Altitude2,Altitude3,Altitude4,Altitude5,Altitude6,Altitude7,Altitude8,Altitude9,Altitude10,Altitude11,Altitude12,Altitude13,Altitude14,Altitude15,Altitude16,Altitude17,Altitude18,Altitude19,Altitude20,)
+------------------------
+name: signal
+constants: (Signal0,Signal1,)
+------------------------
+
+PRODUCTSORT:

@@ -1,0 +1,56 @@
+ Declarations -> declarations |- {Declaration};
+ Declaration -> SortDeclaration | VariableDeclaration | OperatorDeclaration;
+ Declaration.content -> <id,name>;
+ SortDeclaration -> NamedSort;
+ SortDeclaration.content -> Declaration.content;
+ NamedSort -> namedsort |- (SortDeclaration.content || Sort);
+ VariableDeclaration -> variabledecl |- {Declaration.content || Sort};
+ OperatorDeclaration -> NamedOperator;
+ OperatorDeclaration.content -> Declaration.content;
+ --------------------------------------------------------------------------------------------------------------------------
+ NamedOperator -> namedoperator |- (OperatorDeclaration.content || (parameter |- {VariableDeclaration}) || (def |- Term));
+ Term -> Variable | Operator;
+ Variable -> variable<refvariable>;
+ --------------------------------------------------------------------------------------------------------------------------
+ Sort -> BuiltInSort | MultisetSort | ProductSort | UserSort;
+ BuiltInSort -> Dot | CyclicEnumeration | FiniteEnumeration | FiniteIntRange；
+ Dot -> dot;
+ CyclicEnumeration -> cyclicenumeration |- FiniteEnumeration.content;
+ CyclicEnumOperator.content -> BuiltInOperator.content;
+ FiniteEnumeration -> finiteenumeration |- FiniteEnumeration.content;
+ FiniteEnumeration.content -> {FEConstant};
+ FiniteIntRange -> finiteintrange<start,end>;
+ MultisetSort -> multisetsort |- Sort;
+ ProductSort -> productsort |- Sort;
+ UserSort -> usersort<declaration>;
+ Operator ->BuiltInOperator | BuiltInConstant | MultisetOperator | Tuple | UserOperator;
+ Operator.content -> {subterm |- Term};
+ --------------------------------------------------------------------------------------------------------------------------
+ BuiltInOperator-> Cardinality | CardinalityOf | Contains | FiniteIntRangeOperator;
+ Cardinality -> cardinality | BuiltInOperator.content;
+ CardinalityOf -> cardinality | BuiltInOperator.content;
+ Contains -> BuiltInOperator.content;
+ FiniteIntRangeOperator -> FIRLessThan | FIRLessThanOrEqual | FIRGreaterThan | FIRGreaterThanOrEqual;
+ FIRLessThan -> lessthan |- FiniteIntRangeOperator.content;
+ FIRLessThanOrEqual -> lessthanorequal |- FiniteIntRangeOperator.content;
+ FIRGreaterThan -> greaterthan |- FiniteIntRangeOperator.content;
+ FIRGreaterThanOrEqual -> greaterthanorequal |- FiniteIntRangeOperator.content;
+ FiniteIntRangeOperator.content -> BuiltInOperator.content;
+ BuiltInOperator.content -> Operator.content;
+ --------------------------------------------------------------------------------------------------------------------------
+ BuiltInConstant -> DotConstant | FEConstant | FiniteIntRangeConstant;
+ FiniteIntRangeConstant -> finiteintrangeconstant<value> |- (FiniteIntRange || BuiltInConstant.content);
+ DotConstant -> dotconstant;
+ FEConstant -> feconstant |- OperatorDeclaration.content;
+ BuiltInConstant.content -> Operator.content;
+ --------------------------------------------------------------------------------------------------------------------------
+ MultisetOperator-> Add | All | NumberOf | Substract | ScalarProduct | Empty;
+ Add -> add |- MultisetOperator.content;
+ Substract -> substract |- MultisetOperator.content;
+ Empty -> empty |- (MultisetOperator.content || Sort);
+ ScalarProduct -> scalarproduct |- MultisetOperator.content;
+ NumberOf -> numberof |- MultisetOperator.content;
+ MultisetOperator.content -> Operator.content;
+ --------------------------------------------------------------------------------------------------------------------------
+ Tuple->tuple |- Operator.content ;
+ UserOperator->
