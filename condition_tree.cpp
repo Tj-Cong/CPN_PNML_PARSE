@@ -92,6 +92,80 @@ void condition_tree::destructor(CTN *node) {
     delete node;
 }
 
+void condition_tree::computeEXP(CTN *node) {
+    switch(node->mytype)
+    {
+        case Boolean:{
+            if(node->myname == "and")
+            {
+                computeEXP(node->left);
+                computeEXP(node->right);
+                node->myexp = "("+node->left->myexp+")&&("+node->right->myexp+")";
+            }
+            else if(node->myname == "or")
+            {
+                computeEXP(node->left);
+                computeEXP(node->right);
+                node->myexp = "("+node->left->myexp+")||("+node->right->myexp+")";
+            }
+            else if(node->myname == "imply")
+            {
+                computeEXP(node->left);
+                computeEXP(node->right);
+                node->myexp = "("+node->left->myexp+")->("+node->right->myexp+")";
+            }
+            else if(node->myname == "not")
+            {
+                computeEXP(node->left);
+                node->myexp = "!("+node->left->myexp+")";
+            }
+            break;
+        }
+        case Relation:{
+            computeEXP(node->left);
+            computeEXP(node->right);
+            if(node->myname == "equality")
+            {
+                node->myexp = "("+node->left->myexp+")==("+node->right->myexp+")";
+            }
+            else if(node->myname == "inequality")
+            {
+                node->myexp = "("+node->left->myexp+")!=("+node->right->myexp+")";
+            }
+            else if(node->myname == "lessthan")
+            {
+                node->myexp = "("+node->left->myexp+")<("+node->right->myexp+")";
+            }
+            else if(node->myname == "lessthanorequal")
+            {
+                node->myexp = "("+node->left->myexp+")<=("+node->right->myexp+")";
+            }
+            else if(node->myname == "greaterthan")
+            {
+                node->myexp = "("+node->left->myexp+")>("+node->right->myexp+")";
+            }
+            else if(node->myname == "greaterthanorequal")
+            {
+                node->myexp = "("+node->left->myexp+")>=("+node->right->myexp+")";
+            }
+            break;
+        }
+        case variable:{
+            node->myexp = node->myname;
+            break;
+        }
+        case useroperator: {
+            node->myexp = node->myname;
+            break;
+        }
+    }
+}
+
+void condition_tree::printEXP(string &str) {
+    computeEXP(root->left);
+    str = root->left->myexp;
+}
+
 /*********************************************************************************************************/
 arc_expression::arc_expression() {
     root = new meta;
@@ -240,4 +314,58 @@ void arc_expression::destructor(meta *&node) {
         delete node;
         node = NULL;
     }
+}
+
+void arc_expression::computeEXP(meta *node) {
+    if(node->mytype == structure)
+    {
+        if(node->myname == "numberof")
+        {
+            computeEXP(node->leftnode);
+            computeEXP(node->rightnode);
+            node->myexp = node->leftnode->myexp+"'["+node->rightnode->myexp+"]";
+        }
+        else if(node->myname == "number")
+        {
+            node->myexp = to_string(node->number);
+        }
+        else if(node->myname == "tuple")
+        {
+            computeEXP(node->leftnode);
+            computeEXP(node->rightnode);
+            node->myexp = node->leftnode->myexp+","+node->rightnode->myexp;
+        }
+    }
+    else if(node->mytype == operat)
+    {
+        if(node->myname == "successor")
+        {
+            computeEXP(node->leftnode);
+            node->myexp = node->leftnode->myexp+"++";
+        }
+        else if(node->myname =="predecessor")
+        {
+            computeEXP(node->leftnode);
+            node->myexp = node->leftnode->myexp+"--";
+        }
+        else if(node->myname == "add")
+        {
+            computeEXP(node->leftnode);
+            computeEXP(node->rightnode);
+            node->myexp = node->leftnode->myexp+"+"+node->rightnode->myexp;
+        }
+    }
+    else if(node->mytype == delsort)
+    {
+        node->myexp = node->myname;
+    }
+    else if(node->mytype == var)
+    {
+        node->myexp = node->myname;
+    }
+}
+
+void arc_expression::printEXP(string &str) {
+    computeEXP(root->leftnode);
+    str = root->leftnode->myexp;
 }

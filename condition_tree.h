@@ -25,6 +25,7 @@ typedef struct condition_tree_node
     //if this node is a variable or useroperator,
     //myname is this variable or color's name.
     string myname;
+    string myexp;
     nodetype mytype;
     bool mytruth = false;
     condition_tree_node *left = NULL;
@@ -40,6 +41,8 @@ public:
     void constructor(TiXmlElement *condition);
     void build_step(TiXmlElement *elem,CTN *&curnode);
     void destructor(CTN *node);
+    void computeEXP(CTN *node);
+    void printEXP(string &str);
     ~condition_tree();
 };
 
@@ -75,6 +78,7 @@ typedef struct multiset_node
      * 2.as to usroperator, it represents the color's name
      * 3.as to var node, it represents the variable's name*/
     string myname;
+    string myexp;
     /*number has multi-explanations:
      * 1.as number node, it represents the physical number
      * 2.as to usroperator, represents the color index
@@ -95,5 +99,7 @@ public:
     void constructor(TiXmlElement *hlinscription);
     void build_step(TiXmlElement *elem,meta *&curnode);
     void destructor(meta *&node);
+    void computeEXP(meta *node);
+    void printEXP(string &str);
 };
 

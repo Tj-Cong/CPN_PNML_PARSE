@@ -21,10 +21,14 @@ typedef unsigned int NUM_t;
 typedef unsigned short SORTID;
 typedef unsigned short COLORID;
 
+class SortTable;
+struct mapsort_info;
+extern SortTable sorttable;
+
 enum type{dot,finiteintrange,productsort,usersort};
 int stringToNum(const string& str);
 class CPN;
-/*=========================Sort==========================*/
+/*========================Sort==========================*/
 class Sort
 {
 public:
@@ -38,6 +42,7 @@ public:
     string id;
     int sortnum;
     vector<string> sortname;
+    vector<mapsort_info> sortid;
 };
 
 //UserSort is a user declared enumerable sort
@@ -169,9 +174,10 @@ typedef struct mapcolor_info  //only used for cyclicenumeration
     SORTID sid;
     COLORID cid;
 } MCI;
+
 class SortTable
 {
-private:
+public:
     vector<ProductSort> productsort;
     vector<UserSort> usersort;
     vector<FiniteIntRange> finitintrange;
@@ -207,8 +213,15 @@ typedef struct CPN_Place
     type tid;
     SORTID sid;
     Tokens *initMarking=NULL;
+    NUM_t metacount=0;
     vector<CSArc>producer;
     vector<CSArc>consumer;
+
+    void printTokens(string &str);
+    ~CPN_Place(){
+        if(initMarking!=NULL)
+            delete [] initMarking;
+    }
 } CPlace;
 
 typedef struct CPN_Transition
@@ -244,7 +257,6 @@ public:
     NUM_t transitioncount;
     NUM_t arccount;
     NUM_t varcount;
-    SortTable sorttable;
     map<string,index_t> mapPlace;
     map<string,index_t> mapTransition;
 

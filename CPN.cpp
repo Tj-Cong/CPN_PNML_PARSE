@@ -2,6 +2,7 @@
 // Created by hecong on 19-11-23.
 //
 #include "CPN.h"
+SortTable sorttable;
 
 int stringToNum(const string& str)
 {
@@ -9,6 +10,49 @@ int stringToNum(const string& str)
     int num;
     iss >> num;
     return num;
+}
+
+void CPN_Place::printTokens(string &str)
+{
+    if(tid == usersort)
+    {
+        for(int i=0;i<metacount;++i)
+        {
+            COLORID cid;
+            initMarking[i].tokens->getColor(cid);
+            str += to_string(initMarking[i].tokencount)+"\'["+sorttable.usersort[sid].cyclicenumeration[cid]+"] ";
+        }
+
+    }
+    else if(tid == productsort)
+    {
+        for(int i=0;i<metacount;++i)
+        {
+            int membernum = sorttable.productsort[sid].sortnum;
+            COLORID *cid = new COLORID[membernum];
+            initMarking[i].tokens->getColor(cid,membernum);
+            str += to_string(initMarking[i].tokencount)+"\'[";
+            for(int j=0;j<membernum;++j)
+            {
+                MSI m=sorttable.productsort[sid].sortid[j];
+                str+=sorttable.usersort[m.sid].cyclicenumeration[cid[j]]+" ";
+            }
+            str+= "] ";
+            delete cid;
+        }
+    }
+    else if(tid == finiteintrange)
+    {
+        cerr<<"[CPN.h\\line227]Sorry,we don't support this sort now."<<endl;
+        exit(-1);
+    }
+    else if(tid == dot)
+    {
+        for(int i=0;i<metacount;++i)
+        {
+            str+=to_string(initMarking[i].tokencount)+"\'[dot] ";
+        }
+    }
 }
 
 SORTID SortTable::getFIRid(string FIRname) {
@@ -206,6 +250,22 @@ void CPN::getSize(char *filename) {
         }
         declContent = declContent->NextSiblingElement();
     }
+
+    vector<ProductSort>::iterator psiter;
+    for(psiter=sorttable.productsort.begin();psiter!=sorttable.productsort.end();++psiter)
+    {
+        vector<string>::iterator miter;
+        for(miter=psiter->sortname.begin();miter!=psiter->sortname.end();++miter)
+        {
+            map<string,MSI>::iterator citer;
+            citer = sorttable.mapSort.find(*miter);
+            if(citer!=sorttable.mapSort.end())
+            {
+                psiter->sortid.push_back(citer->second);
+            }
+            else cerr<<"[CPN.cpp\\line223].ProductSort error."<<endl;
+        }
+    }
     vartable = new Variable[varcount];
 }
 
@@ -400,7 +460,7 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
             term = term->NextSiblingElement();
         }
         pp.initMarking = new Tokens[metanum];
-
+        pp.metacount = metanum;
         term = elem->FirstChildElement();
         if(i!=0)
             cerr<<"ERROR@CPN.cpp\\line406"<<endl;
@@ -428,7 +488,8 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
         {
             if(pp.initMarking == NULL)
             {
-                pp.initMarking= new Tokens;
+                pp.initMarking= new Tokens[1];
+                pp.metacount = 1;
                 pp.initMarking->initiate(num,pp.tid);
             }
             else
@@ -439,13 +500,14 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
             Tokens *t;
             if(pp.initMarking == NULL)
             {
-                pp.initMarking= new Tokens;
+                pp.initMarking= new Tokens[1];
+                pp.metacount = 1;
                 t = pp.initMarking;
             }
             else{
                 t = &(pp.initMarking[i]);
             }
-            t->initiate(num,pp.tid);
+            t->initiate(num,pp.tid,sorttable.productsort[pp.sid].sortnum);
             if(stvalue == "tuple")
             {
                 ProductSort &ps = sorttable.productsort[pp.sid];
@@ -470,7 +532,8 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
                 Tokens *t;
                 if(pp.initMarking == NULL)
                 {
-                    pp.initMarking= new Tokens;
+                    pp.initMarking= new Tokens[1];
+                    pp.metacount = 1;
                     t = pp.initMarking;
                 }
                 else
@@ -496,6 +559,7 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
                 if(pp.initMarking!=NULL)
                     cerr<<"ERROR@CPN.cpp\\line486"<<endl;
                 pp.initMarking = new Tokens[uu.feconstnum];
+                pp.metacount = uu.feconstnum;
                 //create tokens;
                 COLORID i;
                 for(i=0;i<uu.feconstnum;++i)
@@ -518,9 +582,49 @@ CPN::~CPN() {
 
 void CPN::printCPN() {
     char placefile[]="place_info.txt";
-    char transfile[]="transition_info.txt";
+//    char transfile[]="transition_info.txt";
+//    char arcfile[]="arc_info.txt";
     ofstream outplace(placefile,ios::out);
-    ofstream outtrans(transfile,ios::out);
+//    ofstream outtrans(transfile,ios::out);
+//    ofstream outarc(arcfile,ios::out);
+
+    outplace<<"PLACE INFO {"<<endl;
+    for(int i=0;i<placecount;++i)
+    {
+        string marking;
+        place[i].printTokens(marking);
+        outplace<<"\t"<<place[i].id<<" "<<marking<<endl;
+    }
+    outplace<<"}"<<endl;
+
+    /********************print dot graph*********************/
+    char dotfile[]="CPN.dot";
+    ofstream outdot(dotfile,ios::out);
+    outdot<<"digraph CPN {"<<endl;
+    for(int i=0;i<placecount;++i)
+    {
+        outdot<<"\t"<<place[i].id<<" [shape=circle]"<<endl;
+    }
+    outdot<<endl;
+    for(int i=0;i<transitioncount;++i)
+    {
+        CTransition &t = transition[i];
+        if(t.hasguard)
+        {
+            string guardexp;
+            t.guard.printEXP(guardexp);
+            outdot<<"\t"<<transition[i].id<<" [shape=box,label=\""<<transition[i].id<<"//"<<guardexp<<"\"]"<<endl;
+        }
+        else outdot<<"\t"<<transition[i].id<<" [shape=box]"<<endl;
+    }
+    for(int i=0;i<arccount;++i)
+    {
+        CArc &a = arc[i];
+        string arcexp;
+        a.arc_exp.printEXP(arcexp);
+        outdot<<"\t"<<a.source_id<<"->"<<a.target_id<<" [label=\""<<arcexp<<"\"]"<<endl;
+    }
+    outdot<<"}"<<endl;
 }
 
 void CPN::printSort() {
