@@ -83,7 +83,8 @@ typedef struct multiset_node
      * 1.as number node, it represents the physical number
      * 2.as to usroperator, represents the color index
      * 3.as to var node, it represents the sort index*/
-    int number;
+    int number = -1;
+    int bindptr = 0;
     arcnodetype mytype;
     multiset_node *leftnode = NULL;
     multiset_node *rightnode = NULL;
@@ -96,6 +97,7 @@ public:
 public:
     arc_expression();
     ~arc_expression();
+    void initiate(meta *node);
     void constructor(TiXmlElement *hlinscription);
     void build_step(TiXmlElement *elem,meta *&curnode);
     void destructor(meta *&node);

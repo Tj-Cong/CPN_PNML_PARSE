@@ -88,7 +88,7 @@ SORTID SortTable::getUSid(string USname) {
     return MAXSHORT;
 }
 
-void Tokens::initiate(NUM_t tc,type sort,int PSnum) {
+void Tokens::initiate(SHORTNUM tc,type sort,int PSnum) {
     tokencount = tc;
     switch(sort)
     {
@@ -374,7 +374,8 @@ void CPN::readPNML(char *filename) {
     //doing the second job:
     TiXmlElement *declContent = net->FirstChildElement("declaration")
                                     ->FirstChildElement("structure")
-                                    ->FirstChildElement("declarations");
+                                    ->FirstChildElement("declarations")
+                                    ->FirstChildElement();
     while(declContent)
     {
         string value = declContent->Value();
@@ -393,6 +394,7 @@ void CPN::readPNML(char *filename) {
             iter = sorttable.mapSort.find(sortname);
             vartable[vpter].sid = (iter->second).sid;
             vartable[vpter].tid = (iter->second).tid;
+            mapVariable.insert(pair<string,VARID>(vartable[vpter].id,vpter));
             if((iter->second).tid != usersort)
             {
                 cerr<<"Sorry, but by now, we only support variables whose type is \'cyclicenumeration\'."<<endl;
@@ -452,7 +454,7 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
 
     if(value == "add")
     {
-        NUM_t metanum = 0;
+        SHORTNUM metanum = 0;
         TiXmlElement *term = elem->FirstChildElement();
         while(term)
         {
@@ -478,7 +480,7 @@ void CPN::getInitMarking(TiXmlElement *elem,CPlace &pp,int i) {
         //leftchild gets number
         string numstr = leftchild->FirstChildElement("numberconstant")
                                 ->FirstAttribute()->Value();
-        NUM_t num = stringToNum(numstr);
+        SHORTNUM num = stringToNum(numstr);
 
         //rightchild get color
         TiXmlElement *st = rightchild->FirstChildElement();
@@ -658,5 +660,40 @@ void CPN::printSort() {
         }
         outsort<<")"<<endl;
         outsort<<"------------------------"<<endl;
+    }
+    outsort<<endl;
+}
+
+void CPN::printVar() {
+    ofstream outvar("sorts_info.txt",ios::app);
+    outvar<<"VARIABLES:"<<endl;
+    for(int i=0;i<varcount;++i)
+    {
+        outvar<<"name: "<<vartable[i].id<<endl;
+        outvar<<"related sort: "<<sorttable.usersort[vartable[i].sid].id<<endl;
+        outvar<<"------------------------"<<endl;
+    }
+}
+
+void Tokenscopy(Tokens &t1,const Tokens &t2,type tid,int PSnum)
+{
+    t1.initiate(t2.tokencount,tid,PSnum);
+    if(tid == usersort)
+    {
+        COLORID cid;
+        t2.tokens->getColor(cid);
+        t1.tokens->setColor(cid);
+    }
+    else if(tid == productsort)
+    {
+        COLORID *cid = new COLORID[PSnum];
+        t2.tokens->getColor(cid,PSnum);
+        t1.tokens->setColor(cid,PSnum);
+        delete [] cid;
+    }
+    else if(tid == finiteintrange)
+    {
+        cerr<<"[CPN.h\\Tokenscopy()].FiniteIntRange ERROR"<<endl;
+        exit(-1);
     }
 }

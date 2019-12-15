@@ -369,3 +369,16 @@ void arc_expression::printEXP(string &str) {
     computeEXP(root->leftnode);
     str = root->leftnode->myexp;
 }
+
+void arc_expression::initiate(meta *node) {
+    if(node->mytype == var)
+    {
+        node->bindptr = 0;
+        node->number = -1;
+    }
+    if(node->leftnode!=NULL)
+        initiate(node->leftnode);
+    if(node->rightnode!=NULL)
+        initiate(node->rightnode);
+
+}

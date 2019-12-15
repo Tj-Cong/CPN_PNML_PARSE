@@ -90,6 +90,12 @@
 		<Unit filename="/home/hecong/文档/CPN_PNML_PARSE/CPN.h">
 			<Option target="CPN_PNML_PARSE"/>
 		</Unit>
+		<Unit filename="/home/hecong/文档/CPN_PNML_PARSE/CPN_RG.cpp">
+			<Option target="CPN_PNML_PARSE"/>
+		</Unit>
+		<Unit filename="/home/hecong/文档/CPN_PNML_PARSE/CPN_RG.h">
+			<Option target="CPN_PNML_PARSE"/>
+		</Unit>
 		<Unit filename="/home/hecong/文档/CPN_PNML_PARSE/condition_tree.cpp">
 			<Option target="CPN_PNML_PARSE"/>
 		</Unit>

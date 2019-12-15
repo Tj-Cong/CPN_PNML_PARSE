@@ -150,6 +150,33 @@ CPN.cpp.s:
 	$(MAKE) -f CMakeFiles/CPN_PNML_PARSE.dir/build.make CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.s
 .PHONY : CPN.cpp.s
 
+CPN_RG.o: CPN_RG.cpp.o
+
+.PHONY : CPN_RG.o
+
+# target to build an object file
+CPN_RG.cpp.o:
+	$(MAKE) -f CMakeFiles/CPN_PNML_PARSE.dir/build.make CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o
+.PHONY : CPN_RG.cpp.o
+
+CPN_RG.i: CPN_RG.cpp.i
+
+.PHONY : CPN_RG.i
+
+# target to preprocess a source file
+CPN_RG.cpp.i:
+	$(MAKE) -f CMakeFiles/CPN_PNML_PARSE.dir/build.make CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.i
+.PHONY : CPN_RG.cpp.i
+
+CPN_RG.s: CPN_RG.cpp.s
+
+.PHONY : CPN_RG.s
+
+# target to generate assembly for a file
+CPN_RG.cpp.s:
+	$(MAKE) -f CMakeFiles/CPN_PNML_PARSE.dir/build.make CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.s
+.PHONY : CPN_RG.cpp.s
+
 condition_tree.o: condition_tree.cpp.o
 
 .PHONY : condition_tree.o
@@ -324,6 +351,9 @@ help:
 	@echo "... CPN.o"
 	@echo "... CPN.i"
 	@echo "... CPN.s"
+	@echo "... CPN_RG.o"
+	@echo "... CPN_RG.i"
+	@echo "... CPN_RG.s"
 	@echo "... condition_tree.o"
 	@echo "... condition_tree.i"
 	@echo "... condition_tree.s"

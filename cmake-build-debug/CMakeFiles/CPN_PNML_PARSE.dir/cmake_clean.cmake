@@ -6,6 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/CPN_PNML_PARSE.dir/tinyxml.cpp.o"
   "CMakeFiles/CPN_PNML_PARSE.dir/tinyxmlerror.cpp.o"
   "CMakeFiles/CPN_PNML_PARSE.dir/tinyxmlparser.cpp.o"
+  "CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o"
   "CPN_PNML_PARSE.pdb"
   "CPN_PNML_PARSE"
 )

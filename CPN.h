@@ -20,14 +20,16 @@ typedef unsigned int index_t;    //索引数据类型
 typedef unsigned int NUM_t;
 typedef unsigned short SORTID;
 typedef unsigned short COLORID;
-
-class SortTable;
-struct mapsort_info;
-extern SortTable sorttable;
+typedef unsigned short VARID;
+typedef unsigned short SHORTNUM;
 
 enum type{dot,finiteintrange,productsort,usersort};
 int stringToNum(const string& str);
+
 class CPN;
+class SortTable;
+struct mapsort_info;
+extern SortTable sorttable;
 /*========================Sort==========================*/
 class Sort
 {
@@ -50,7 +52,7 @@ class UserSort:public Sort
 {
 public:
     string id;
-    NUM_t feconstnum;
+    SHORTNUM feconstnum;
     vector<string> cyclicenumeration;
     map<string,COLORID> mapValue;
 
@@ -153,13 +155,12 @@ class Tokens
 {
 public:
     SortValue *tokens;
-    NUM_t tokencount;
+    SHORTNUM tokencount;
+    Tokens *next;
 
-    Tokens() {tokens = NULL,tokencount=0;};
-    void initiate(NUM_t tc,type sort,int PSnum=0);
-    ~Tokens() {
-        delete tokens;
-    }
+    Tokens() {tokens = NULL,tokencount=0;next=NULL;}
+    ~Tokens() {delete tokens;}
+    void initiate(SHORTNUM tc,type sort,int PSnum=0);
 };
 /*===========================================================*/
 typedef struct mapsort_info
@@ -205,6 +206,7 @@ typedef struct CPN_Small_Arc
 {
     index_t idx;
     arc_expression arc_exp;
+
 } CSArc;
 
 typedef struct CPN_Place
@@ -213,7 +215,7 @@ typedef struct CPN_Place
     type tid;
     SORTID sid;
     Tokens *initMarking=NULL;
-    NUM_t metacount=0;
+    SHORTNUM metacount=0;
     vector<CSArc>producer;
     vector<CSArc>consumer;
 
@@ -259,6 +261,7 @@ public:
     NUM_t varcount;
     map<string,index_t> mapPlace;
     map<string,index_t> mapTransition;
+    map<string,VARID> mapVariable;
 
     CPN();
     void getSize(char *filename);
@@ -266,8 +269,9 @@ public:
     void getInitMarking(TiXmlElement *initMarking,CPlace &pp,int i);
     void printCPN();
     void printSort();
+    void printVar();
     ~CPN();
 private:
-
-
 };
+
+void Tokenscopy(Tokens &t1,const Tokens &t2,type tid,int PSnum=0);

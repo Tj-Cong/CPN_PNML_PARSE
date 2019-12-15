@@ -16,4 +16,4 @@ add_executable(
         tinyxml.h
         tinyxmlerror.cpp
         tinyxmlparser.cpp
-)
+        CPN_RG.h CPN_RG.cpp)
