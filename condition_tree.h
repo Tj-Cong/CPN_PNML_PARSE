@@ -4,11 +4,20 @@
 
 #include <iostream>
 #include "tinyxml.h"
+#include <map>
+
 using namespace std;
+class SortTable;
+class CPN;
+struct mapcolor_info;
+extern SortTable sorttable;
+extern CPN *cpnet;
 
 extern int stringToNum(const string& str);
 enum nodetype{root,Boolean,Relation,variable,useroperator};
-
+typedef unsigned short COLORID;
+typedef unsigned short SORTID;
+typedef unsigned short VARID;
 /***********************************************************************/
 /*=====Transition's guard function is an AST(Abstract Syntax Tree)=====*/
 /*Here is an example                                                   *
@@ -26,6 +35,7 @@ typedef struct condition_tree_node
     //myname is this variable or color's name.
     string myname;
     string myexp;
+    COLORID cid;
     nodetype mytype;
     bool mytruth = false;
     condition_tree_node *left = NULL;
@@ -34,7 +44,7 @@ typedef struct condition_tree_node
 
 class condition_tree
 {
-private:
+public:
     CTN *root;
 public:
     condition_tree();

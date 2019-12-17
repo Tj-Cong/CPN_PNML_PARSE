@@ -7,6 +7,13 @@ CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.o: ../condition_tree.h
 CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.o: ../tinystr.h
 CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.o: ../tinyxml.h
 
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../CPN.h
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../CPN_RG.cpp
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../CPN_RG.h
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../condition_tree.h
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../tinystr.h
+CMakeFiles/CPN_PNML_PARSE.dir/CPN_RG.cpp.o: ../tinyxml.h
+
 CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o: ../condition_tree.cpp
 CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o: ../condition_tree.h
 CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o: ../tinystr.h

@@ -24,6 +24,7 @@ class CPN_RG;
 
 void MarkingMetacopy(MarkingMeta &mm1,const MarkingMeta &mm2,type tid,SORTID sid);
 void arrayToString(string &str,COLORID *cid,int num);
+void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2);
 class MarkingMeta
 {
 private:
@@ -48,9 +49,11 @@ public:
     void initiate(type t,SORTID s) {tid=t;sid=s;}
     void insert(Tokens *token);
     index_t Hash();
+    bool operator>=(const MarkingMeta &mm);
     friend class CPN_RGNode;
     friend class CPN_RG;
     friend void MarkingMetacopy(MarkingMeta &mm1,const MarkingMeta &mm2,type tid,SORTID sid);
+    friend void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2);
 };
 
 class CPN_RGNode
@@ -77,9 +80,11 @@ class Bindind
 public:
     COLORID *varvec;
     Bindind *next;
+    MarkingMeta *arcsMultiSet;
 
     Bindind() {
         next=NULL;
+        arcsMultiSet = NULL;
         varvec=new COLORID[varcount];
         memset(varvec,MAXSHORT,sizeof(COLORID)*varcount);
     }
@@ -154,6 +159,7 @@ public:
     int giveVarColor(multiset_node *expnode,const MarkingMeta &mm,VARID *varvec,int psindex=0);
     void computeArcEXP(const arc_expression &arcexp,MarkingMeta &mm,int psnum=0);
     void computeArcEXP(meta *expnode,MarkingMeta &mm,int psnum=0);
+    void judgeGuard(CTN *node,COLORID *cid);
     void getTupleColor(meta *expnode,COLORID *cid,int ptr);
     CPN_RGNode *CPNRGinitialnode();
     CPN_RGNode *CPNRGcreatenode(CPN_RGNode *mark,int tranxnum,bool &exist);

@@ -28,7 +28,121 @@ void arrayToString(string &str,COLORID *cid,int num)
         str += to_string(cid[i]);
     }
 }
+void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2)
+{
+    Tokens *resp,*pp1,*pp2;
+    pp1 = mm1.tokenQ->next;
+    pp2 = mm2.tokenQ->next;
+    res.sid = mm1.sid;
+    res.tid = mm1.tid;
+    if(mm1.tid == dot)
+    {
+        resp = new Tokens;
+        SHORTNUM num = pp1->tokencount - pp2->tokencount;
+        resp->initiate(num,dot);
+        res.insert(resp);
+    }
+    else if(mm1.tid == usersort)
+    {
+        COLORID cid1,cid2;
+        while(pp2)
+        {
+            pp2->tokens->getColor(cid2);
+            while(pp1)
+            {
+                pp1->tokens->getColor(cid1);
+                if(cid1<cid2)
+                {
+                    resp = new Tokens;
+                    Tokenscopy(*resp,*pp1,usersort);
+                    res.insert(resp);
+                    pp1=pp1->next;
+                    continue;
+                }
+                else if(cid1==cid2)
+                {
+                    SHORTNUM num = pp1->tokencount - pp2->tokencount;
+                    if(num>0)
+                    {
+                        resp = new Tokens;
+                        resp->initiate(num,usersort);
+                        resp->tokens->setColor(cid1);
+                        res.insert(resp);
+                    }
+                    break;
+                }
+                else if(cid1 > cid2)
+                {
+                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+                    exit(-1);
+                }
+            }
+            if(!pp1)
+            {
+                cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+                exit(-1);
+            }
+            else {
+                pp1=pp1->next;
+                pp2=pp2->next;
+            }
+        }
+    }
+    else if(mm1.tid == productsort)
+    {
+        int sortnum = sorttable.productsort[mm1.sid].sortnum;
+        COLORID *cid1,*cid2;
+        cid1 = new COLORID[sortnum];
+        cid2 = new COLORID[sortnum];
+        string str1,str2;
+        while(pp2)
+        {
+            pp2->tokens->getColor(cid2,sortnum);
+            arrayToString(str2,cid2,sortnum);
+            while(pp1)
+            {
+                pp1->tokens->getColor(cid1,sortnum);
+                arrayToString(str1,cid1,sortnum);
+                if(str1<str2)
+                {
+                    resp = new Tokens;
+                    Tokenscopy(*resp,*pp1,productsort,sortnum);
+                    res.insert(resp);
+                    pp1=pp1->next;
+                    continue;
+                }
+                else if(str1 == str2)
+                {
+                    SHORTNUM num = pp1->tokencount-pp2->tokencount;
+                    if(num>0)
+                    {
+                        resp = new Tokens;
+                        resp->initiate(num,productsort,sortnum);
+                        resp->tokens->setColor(cid1,sortnum);
+                        res.insert(resp);
+                    }
+                    break;
+                }
+                else if(str1 > str2)
+                {
+                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+                    exit(-1);
+                }
+            }
+            if(!pp1)
+            {
+                cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+                exit(-1);
+            }
+            else {
+                pp1=pp1->next;
+                pp2=pp2->next;
+            }
+        }
+    }
+}
 
+/***********************************************************************/
 index_t MarkingMeta::Hash() {
     index_t hv = 0;
     if(tid == usersort)
@@ -153,6 +267,110 @@ void MarkingMeta::insert(Tokens *t) {
     {
         tokenQ->next->tokencount+=t->tokencount;
     }
+}
+
+bool MarkingMeta::operator>=(const MarkingMeta &mm) {
+    bool greaterorequ = true;
+    Tokens *p1,*p2;
+    p1 = this->tokenQ->next;
+    p2 = mm.tokenQ->next;
+    if(this->tid == dot)
+    {
+        if(p1->tokencount>=p2->tokencount)
+            greaterorequ = true;
+        else
+            greaterorequ = false;
+    }
+    else if(this->tid == usersort)
+    {
+        COLORID cid1,cid2;
+        while(p2)
+        {
+            //p2中的元素，p1中必须都有；遍历p2
+            p2->tokens->getColor(cid2);
+            while(p1)
+            {
+                p1->tokens->getColor(cid1);
+                if(cid1<cid2)
+                {
+                    p1=p1->next;
+                    continue;
+                }
+                else if(cid1==cid2)
+                {
+                    if(p1->tokencount>=p2->tokencount)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        greaterorequ = false;
+                        break;
+                    }
+
+                }
+                else if(cid1>cid2)
+                {
+                    greaterorequ = false;
+                    break;
+                }
+            }
+            if(p1 == NULL)
+                greaterorequ = false;
+            if(!greaterorequ)
+                break;
+            else{
+                p2=p2->next;
+            }
+        }
+    }
+    else if(this->tid == productsort)
+    {
+        int sortnum = sorttable.productsort[sid].sortnum;
+        COLORID *cid1,*cid2;
+        cid1 = new COLORID[sortnum];
+        cid2 = new COLORID[sortnum];
+        string str1,str2;
+        while(p2)
+        {
+            p2->tokens->getColor(cid2,sortnum);
+            arrayToString(str2,cid2,sortnum);
+            while(p1)
+            {
+                p1->tokens->getColor(cid1,sortnum);
+                arrayToString(str1,cid1,sortnum);
+                if(str1<str2){
+                    p1=p1->next;
+                    continue;
+                }
+                else if(str1 == str2)
+                {
+                    if(p1->tokencount>=p2->tokencount)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        greaterorequ = false;
+                        break;
+                    }
+                }
+                else if(str1>str2)
+                {
+                    greaterorequ = false;
+                    break;
+                }
+            }
+            if(p1 == NULL)
+                greaterorequ = false;
+            if(!greaterorequ)
+                break;
+            else {
+                p2=p2->next;
+            }
+        }
+    }
+    return greaterorequ;
 }
 
 /*****************************************************************/
@@ -340,6 +558,7 @@ CPN_RGNode *CPN_RG::CPNRGinitialnode() {
 }
 
 CPN_RGNode *CPN_RG::CPNRGcreatenode(CPN_RGNode *mark, int tranxnum, bool &exist) {
+
     return nullptr;
 }
 
@@ -405,12 +624,13 @@ void CPN_RG::gerFireableTranx(CPN_RGNode *curnode,FiTranQueue &fireableTs){
         {
             csiter->arc_exp.initiate(csiter->arc_exp.root);
         }
+
         //对于变迁tran,寻找他的每一种绑定，放在tbq中
         while(true)
         {
             //在寻找一种绑定时，需要遍历该变迁的全部前继库所和弧
             Bindind *bb = new Bindind;
-            bool success = true;
+            bool success = true;   //success表示是否着色成功
             vector<CSArc>::iterator iter;
             for(iter=tran.producer.begin();iter!=tran.producer.end();++iter)
             {
@@ -422,27 +642,87 @@ void CPN_RG::gerFireableTranx(CPN_RGNode *curnode,FiTranQueue &fireableTs){
                     break;
                 }
             }
-            if(VARFLAG == false)
-            {
-                //没有变量
-            }
-            if(success)
+
+            if(success) //着色成功后，判断该着色是否合法
             {
                 //计算弧的颜色多重集
-                MarkingMeta *mm = new MarkingMeta[tran.producer.size()];
+                bool firebound = true;
 
-                delete [] mm;
-                //判断前继库所中的token和弧上表达式的关系
+                //将每一个弧表达式转化为一个多重集，多重集用MarkingMeta表示
+                //申请一个MarkingMeta数组，mm[i]就表示变迁tran第i个前继弧的multi-set
+                MarkingMeta *mm = new MarkingMeta[tran.producer.size()];
+                vector<CSArc>::iterator it;
+                int i;
+                for(i=0,it=tran.producer.begin();it!=tran.producer.end();++i,++it)
+                {
+                    //计算每一个前继弧的多重集，并判断个前继库所的包含关系
+                    type ptid = cpnet->place[it->idx].tid;
+                    SORTID psid = cpnet->place[it->idx].sid;
+                    mm[i].initiate(ptid,psid);
+
+                    int psnum;
+                    if(ptid == productsort){
+                        psnum = sorttable.productsort[psid].sortnum;
+                    }
+                    else
+                        psnum = 0;
+                    computeArcEXP(it->arc_exp,mm[i],psnum);
+
+                    //判断前继库所中的token和弧上表达式的关系
+                    if(curnode->marking[it->idx] >= mm[i])
+                        continue;
+                    else
+                    {
+                        firebound = false;
+                        break;
+                    }
+                }
+                if(!firebound)
+                {
+                    delete bb;
+                    delete [] mm;
+                    if(!VARFLAG)   //没有变量
+                        break;
+                    else
+                        continue;
+                }
+
+                if(!tran.hasguard) {
+                    continue;
+                }
+
                 //判断guard函数
+                judgeGuard(tran.guard.root->left,bb->varvec);
+                if(tran.guard.root->left->mytruth)
+                {
+                    //变迁真的能发生！
+                    bb->arcsMultiSet = mm;
+                    tbq->insert(bb);
+                }
+                else
+                {
+                    delete bb;
+                    delete [] mm;
+                }
+
+                //如果这个变迁不需要绑定，则只要进行一次
+                if(!VARFLAG)
+                    break;
             }
             else
                 break;
         }
 
-
+        //看看该变迁是否有可使能的
+        if(tbq->bindQ == NULL)
+        {
+            delete tbq;
+        }
+        else {
+            tbq->initiate();
+            fireableTs.insert(tbq);
+        }
     }
-    //2.check arc expression
-    //3.check guard function
 }
 
 /*功能说明：
@@ -586,7 +866,7 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
          * */
 
         //doing the first job;
-        int num = expnode->leftnode->number;
+        SHORTNUM num = expnode->leftnode->number;
         //doing the second job;
         meta *color = expnode->rightnode;
         if(color->myname == "tuple")
@@ -596,19 +876,26 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
             getTupleColor(color,cid,0);
             //创建一个colortoken，插入到mm中
             Tokens *t = new Tokens;
-            t->tokencount = num;
+            t->initiate(num,productsort,psnum);
             t->tokens->setColor(cid,psnum);
             mm.insert(t);
             delete [] cid;
         }
         else if(color->mytype == delsort)
         {
+            Tokens *p = new Tokens;
+            if(color->myname == "dotconstant")
+            {
+                p->initiate(num,dot);
+                mm.insert(p);
+            }
+
             COLORID cid;
             map<string,MCI>::iterator citer;
             citer = sorttable.mapColor.find(color->myname);
             cid = citer->second.cid;
-            Tokens *p = new Tokens;
-            p->tokencount = num;
+
+            p->initiate(num,usersort);
             p->tokens->setColor(cid);
             mm.insert(p);
         }
@@ -616,7 +903,7 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
         {
             COLORID cid = color->number;
             Tokens *p = new Tokens;
-            p->tokencount = num;
+            p->initiate(num,usersort);
             p->tokens->setColor(cid);
             mm.insert(p);
         }
@@ -650,5 +937,158 @@ void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,int ptr) {
     {
         getTupleColor(expnode->leftnode,cid,ptr);
         getTupleColor(expnode->rightnode,cid,ptr+1);
+    }
+    else if(expnode->myname == "successor")
+    {
+        SHORTNUM feconstnum;
+        if(expnode->leftnode->mytype == var)
+        {
+            map<string,VARID>::iterator viter;
+            viter = cpnet->mapVariable.find(expnode->leftnode->myname);
+            SORTID sid = cpnet->vartable[viter->second].sid;
+            feconstnum = sorttable.usersort[sid].feconstnum;
+        }
+        else if(expnode->leftnode->mytype == delsort)
+        {
+            map<string,MCI>::iterator citer;
+            citer = sorttable.mapColor.find(expnode->myname);
+            feconstnum = sorttable.usersort[citer->second.sid].feconstnum;
+        }
+        cid[ptr] = ((expnode->leftnode->number)+1)%feconstnum;
+    }
+    else if(expnode->myname == "predecessor")
+    {
+        SHORTNUM feconstnum;
+        if(expnode->leftnode->mytype == var)
+        {
+            map<string,VARID>::iterator viter;
+            viter = cpnet->mapVariable.find(expnode->leftnode->myname);
+            SORTID sid = cpnet->vartable[viter->second].sid;
+            feconstnum = sorttable.usersort[sid].feconstnum;
+        }
+        else if(expnode->leftnode->mytype == delsort)
+        {
+            map<string,MCI>::iterator citer;
+            citer = sorttable.mapColor.find(expnode->myname);
+            feconstnum = sorttable.usersort[citer->second.sid].feconstnum;
+        }
+        if(expnode->leftnode->number == 0)
+            cid[ptr] = feconstnum-1;
+        else
+            cid[ptr] = (expnode->leftnode->number)-1;
+    }
+}
+
+void CPN_RG::judgeGuard(CTN *node,COLORID *cid) {
+    switch(node->mytype)
+    {
+        case Boolean:{
+            if(node->myname == "and")
+            {
+                judgeGuard(node->left,cid);
+                judgeGuard(node->right,cid);
+                if(!node->left->mytruth)
+                    node->mytruth = false;
+                else
+                    node->mytruth = node->right->mytruth;
+            }
+            else if(node->myname == "or")
+            {
+                judgeGuard(node->left,cid);
+                judgeGuard(node->right,cid);
+                if(node->left->mytruth)
+                    node->mytruth = true;
+                else
+                    node->mytruth = node->right->mytruth;
+            }
+            else if(node->myname == "imply")
+            {
+                judgeGuard(node->left,cid);
+                judgeGuard(node->right,cid);
+                if(!node->left->mytruth)
+                    node->mytruth = true;
+                else if(node->left->mytruth && node->right->mytruth)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "not")
+            {
+                judgeGuard(node->left,cid);
+                if(node->left->mytruth)
+                    node->mytruth = false;
+                else
+                    node->mytruth = true;
+            }
+            break;
+        }
+        case Relation:{
+            if(node->left->mytype!=variable && node->left->mytype!=useroperator)
+                cerr<<"[condition_tree::judgeGuard]ERROR:Relation node's leftnode is not a variable or color."<<endl;
+            if(node->right->mytype!=variable && node->right->mytype!=useroperator)
+                cerr<<"[condition_tree::judgeGuard]ERROR:Relation node's rightnode is not a variable or color."<<endl;
+            judgeGuard(node->left,cid);
+            judgeGuard(node->right,cid);
+            if(node->myname == "equality")
+            {
+                if(node->left->cid == node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "inequality")
+            {
+                if(node->left->cid != node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "lessthan")
+            {
+                if(node->left->cid < node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "lessthanorequal")
+            {
+                if(node->left->cid <= node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "greaterthan")
+            {
+                if(node->left->cid > node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            else if(node->myname == "greaterthanorequal")
+            {
+                if(node->left->cid >= node->right->cid)
+                    node->mytruth = true;
+                else
+                    node->mytruth = false;
+            }
+            break;
+        }
+        case variable:{
+            map<string,VARID>::iterator viter;
+            viter=cpnet->mapVariable.find(node->myname);
+            if(cid[viter->second] == MAXSHORT)
+            {
+                cerr<<"[condition_tree::judgeGuard]ERROR:Variable "<<node->myname<<" is not bounded."<<endl;
+                exit(-1);
+            }
+            node->cid = cid[viter->second];
+            break;
+        }
+        case useroperator: {
+            map<string,mapcolor_info>::iterator citer;
+            citer = sorttable.mapColor.find(node->myname);
+            node->cid = citer->second.cid;
+            break;
+        }
     }
 }
