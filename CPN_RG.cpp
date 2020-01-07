@@ -3,21 +3,36 @@
 //
 
 #include "CPN_RG.h"
-static int COLORFLAG;
-static bool VARFLAG;
 
+/*
+ * */
 void MarkingMetacopy(MarkingMeta &mm1,const MarkingMeta &mm2,type tid,SORTID sid)
 {
     mm1.colorcount = mm2.colorcount;
     Tokens *q = mm2.tokenQ->next;
     Tokens *p,*ppre = mm1.tokenQ;
-    while(q)
+    if(mm2.tid == productsort)
     {
-        p = new Tokens;
-        Tokenscopy(*p,*q,tid,sid);
-        ppre->next = p;
-        ppre = p;
-        q=q->next;
+        while(q)
+        {
+            p = new Tokens;
+            int sortnum = sorttable.productsort[mm2.sid].sortnum;
+            Tokenscopy(*p,*q,tid,sortnum);
+            ppre->next = p;
+            ppre = p;
+            q=q->next;
+        }
+    }
+    else
+    {
+        while(q)
+        {
+            p = new Tokens;
+            Tokenscopy(*p,*q,tid);
+            ppre->next = p;
+            ppre = p;
+            q=q->next;
+        }
     }
 }
 void arrayToString(string &str,COLORID *cid,int num)
@@ -28,19 +43,24 @@ void arrayToString(string &str,COLORID *cid,int num)
         str += to_string(cid[i]);
     }
 }
-void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2)
+int MINUS(MarkingMeta &mm1,const MarkingMeta &mm2)
 {
-    Tokens *resp,*pp1,*pp2;
+    Tokens *pp1,*pp2,*pp1p;
     pp1 = mm1.tokenQ->next;
+    pp1p = mm1.tokenQ;
     pp2 = mm2.tokenQ->next;
-    res.sid = mm1.sid;
-    res.tid = mm1.tid;
     if(mm1.tid == dot)
     {
-        resp = new Tokens;
-        SHORTNUM num = pp1->tokencount - pp2->tokencount;
-        resp->initiate(num,dot);
-        res.insert(resp);
+        if(pp1->tokencount<pp2->tokencount)
+            return 0;
+        pp1->tokencount = pp1->tokencount-pp2->tokencount;
+        if(pp1->tokencount == 0)
+        {
+            delete pp1;
+            mm1.tokenQ->next=NULL;
+            mm1.colorcount = 0;
+        }
+        return 1;
     }
     else if(mm1.tid == usersort)
     {
@@ -53,40 +73,44 @@ void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2)
                 pp1->tokens->getColor(cid1);
                 if(cid1<cid2)
                 {
-                    resp = new Tokens;
-                    Tokenscopy(*resp,*pp1,usersort);
-                    res.insert(resp);
+                    pp1p = pp1;
                     pp1=pp1->next;
                     continue;
                 }
                 else if(cid1==cid2)
                 {
-                    SHORTNUM num = pp1->tokencount - pp2->tokencount;
-                    if(num>0)
+                    if(pp1->tokencount < pp2->tokencount)
+                        return 0;
+                    pp1->tokencount = pp1->tokencount - pp2->tokencount;
+                    if(pp1->tokencount == 0)
                     {
-                        resp = new Tokens;
-                        resp->initiate(num,usersort);
-                        resp->tokens->setColor(cid1);
-                        res.insert(resp);
+                        pp1p->next = pp1->next;
+                        mm1.colorcount--;
+                        delete pp1;
+
+                        pp2=pp2->next;
+                        pp1=pp1p->next;
+                        break;
+                    } else{
+                        pp2=pp2->next;
+                        pp1p = pp1;
+                        pp1=pp1->next;
+                        break;
                     }
-                    break;
                 }
                 else if(cid1 > cid2)
                 {
-                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
-                    exit(-1);
+                    return 0;
+//                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+//                    exit(-1);
                 }
             }
-            if(!pp1)
+            if(pp1==NULL && pp2!=NULL)
             {
-                cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
-                exit(-1);
-            }
-            else {
-                pp1=pp1->next;
-                pp2=pp2->next;
+                return 0;
             }
         }
+        return 1;
     }
     else if(mm1.tid == productsort)
     {
@@ -105,43 +129,73 @@ void MINUS(MarkingMeta &res,const MarkingMeta &mm1,const MarkingMeta &mm2)
                 arrayToString(str1,cid1,sortnum);
                 if(str1<str2)
                 {
-                    resp = new Tokens;
-                    Tokenscopy(*resp,*pp1,productsort,sortnum);
-                    res.insert(resp);
+                    pp1p = pp1;
                     pp1=pp1->next;
                     continue;
                 }
                 else if(str1 == str2)
                 {
-                    SHORTNUM num = pp1->tokencount-pp2->tokencount;
-                    if(num>0)
+                    if(pp1->tokencount<pp2->tokencount)
+                        return 0;
+                    pp1->tokencount = pp1->tokencount-pp2->tokencount;
+                    if(pp1->tokencount == 0)
                     {
-                        resp = new Tokens;
-                        resp->initiate(num,productsort,sortnum);
-                        resp->tokens->setColor(cid1,sortnum);
-                        res.insert(resp);
+                        pp1p->next = pp1->next;
+                        mm1.colorcount--;
+                        delete pp1;
+
+                        pp1=pp1p->next;
+                        pp2=pp2->next;
+                        break;
                     }
-                    break;
+                    else
+                    {
+                        pp1p=pp1;
+                        pp1=pp1->next;
+                        pp2=pp2->next;
+                        break;
+                    }
                 }
                 else if(str1 > str2)
                 {
-                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
-                    exit(-1);
+                    return 0;
+//                    cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
+//                    exit(-1);
                 }
             }
-            if(!pp1)
+            if(pp1==NULL && pp2!=NULL)
             {
-                cerr<<"[MINUS]ERROR:The minued is not greater than the subtractor."<<endl;
-                exit(-1);
-            }
-            else {
-                pp1=pp1->next;
-                pp2=pp2->next;
+                return 0;
             }
         }
+        return 1;
     }
 }
 
+void PLUS(MarkingMeta &mm1,const MarkingMeta &mm2)
+{
+    Tokens *p = mm2.tokenQ->next;
+    Tokens *resp;
+    if(mm1.tid == productsort)
+    {
+        int sortnum = sorttable.productsort[mm1.sid].sortnum;
+        while(p)
+        {
+            resp = new Tokens;
+            Tokenscopy(*resp,*p,mm1.tid,sortnum);
+            mm1.insert(resp);
+            p=p->next;
+        }
+    } else{
+        while(p)
+        {
+            resp = new Tokens;
+            Tokenscopy(*resp,*p,mm1.tid);
+            mm1.insert(resp);
+            p=p->next;
+        }
+    }
+}
 /***********************************************************************/
 index_t MarkingMeta::Hash() {
     index_t hv = 0;
@@ -160,24 +214,25 @@ index_t MarkingMeta::Hash() {
     {
         hv = colorcount*H1FACTOR*H1FACTOR*H1FACTOR;
         Tokens *p;
+        int sortnum = sorttable.productsort[sid].sortnum;
+        COLORID *cid = new COLORID[sortnum];
         for(p=tokenQ->next;p!=NULL;p=p->next)
         {
-            int sortnum = sorttable.productsort[sid].sortnum;
-            COLORID *cid = new COLORID[sortnum];
             p->tokens->getColor(cid,sortnum);
             hv += p->tokencount*H1FACTOR*H1FACTOR;
             for(int j=0;j<sortnum;++j)
             {
                 hv += (cid[j]+1)*H1FACTOR;
             }
-            delete [] cid;
         }
+        delete [] cid;
     }
     else if(tid == dot)
     {
         hv = colorcount*H1FACTOR*H1FACTOR*H1FACTOR;
         Tokens *p = tokenQ->next;
-        hv += p->tokencount*H1FACTOR*H1FACTOR;
+        if(p!=NULL)
+            hv += p->tokencount*H1FACTOR*H1FACTOR;
     }
     else if(tid == finiteintrange)
     {
@@ -265,7 +320,12 @@ void MarkingMeta::insert(Tokens *t) {
     }
     else if(tid == dot)
     {
-        tokenQ->next->tokencount+=t->tokencount;
+        if(tokenQ->next == NULL)
+            tokenQ->next=t;
+        else {
+            tokenQ->next->tokencount+=t->tokencount;
+        }
+        colorcount = 1;
     }
 }
 
@@ -274,6 +334,13 @@ bool MarkingMeta::operator>=(const MarkingMeta &mm) {
     Tokens *p1,*p2;
     p1 = this->tokenQ->next;
     p2 = mm.tokenQ->next;
+
+    if(mm.colorcount==0)
+        return true;
+    else if(this->colorcount == 0)
+        return false;
+
+
     if(this->tid == dot)
     {
         if(p1->tokencount>=p2->tokencount)
@@ -307,7 +374,6 @@ bool MarkingMeta::operator>=(const MarkingMeta &mm) {
                         greaterorequ = false;
                         break;
                     }
-
                 }
                 else if(cid1>cid2)
                 {
@@ -373,6 +439,45 @@ bool MarkingMeta::operator>=(const MarkingMeta &mm) {
     return greaterorequ;
 }
 
+void MarkingMeta::printToken() {
+    Tokens *p = tokenQ->next;
+    if(p==NULL)
+    {
+        cout<<"NULL"<<endl;
+        return;
+    }
+    while(p)
+    {
+        cout<<p->tokencount<<"\'";
+        if(tid == usersort)
+        {
+            COLORID cid;
+            p->tokens->getColor(cid);
+            cout<<sorttable.usersort[sid].cyclicenumeration[cid];
+        }
+        else if(tid == productsort)
+        {
+            int sortnum = sorttable.productsort[sid].sortnum;
+            COLORID *cid = new COLORID[sortnum];
+            p->tokens->getColor(cid,sortnum);
+            cout<<"[";
+            for(int i=0;i<sortnum;++i)
+            {
+                SORTID ssid = sorttable.productsort[sid].sortid[i].sid;
+                cout<<sorttable.usersort[ssid].cyclicenumeration[cid[i]];
+            }
+            cout<<"]";
+        }
+        else if(tid == dot)
+        {
+            cout<<"dot";
+        }
+        p=p->next;
+        cout<<'+';
+    }
+    cout<<endl;
+}
+
 /*****************************************************************/
 CPN_RGNode::~CPN_RGNode() {
     delete [] marking;
@@ -386,6 +491,8 @@ index_t CPN_RGNode::Hash(SHORTNUM *weight) {
     }
 }
 
+/*function:判断两个状态CPN_RGNode是否为同一个状态；
+ * */
 bool CPN_RGNode::operator==(const CPN_RGNode &n1) {
     bool equal = true;
     for(int i=0;i<placecount;++i)
@@ -458,6 +565,58 @@ bool CPN_RGNode::operator==(const CPN_RGNode &n1) {
     return equal;
 }
 
+/*function:复制一个状态
+ * */
+void CPN_RGNode::operator=(const CPN_RGNode &rgnode) {
+    int i;
+    for(i=0;i<placecount;++i)
+    {
+        const MarkingMeta &placemark = rgnode.marking[i];
+        MarkingMetacopy(this->marking[i],placemark,placemark.tid,placemark.sid);
+    }
+}
+
+void CPN_RGNode::printMarking() {
+    cout<<"[M"<<numid<<"]"<<endl;
+    for(int i=0;i<placecount;++i)
+    {
+        cout<<setiosflags(ios::left)<<setw(15)<<cpnet->place[i].id<<":";
+        this->marking[i].printToken();
+    }
+    cout<<"----------------------------------"<<endl;
+}
+
+void CPN_RGNode::selfcheck() {
+    for(int i=0;i<placecount;++i)
+    {
+        if(marking[i].tid != cpnet->place[i].tid)
+        {
+            cerr<<"TYPE ERROR!"<<endl;
+            exit(-1);
+        }
+        int cc = 0;
+        Tokens *p = marking[i].tokenQ->next;
+        while(p)
+        {
+            cc++;
+            p=p->next;
+        }
+        if(cc!=marking[i].colorcount)
+        {
+            cerr<<"COLORCOUNT ERROR!"<<endl;
+            exit(-1);
+        }
+        if(marking[i].tid == dot)
+        {
+            if(cc>1)
+            {
+                cerr<<"DOT ERROR!"<<endl;
+                exit(-1);
+            }
+        }
+    }
+}
+
 /*************************TranBindQueue****************************/
 void TranBindQueue::insert(Bindind *bound) {
     bound->next = bindQ;
@@ -467,7 +626,7 @@ void TranBindQueue::insert(Bindind *bound) {
 void TranBindQueue::getSize(int &size) {
     size = 0;
     Bindind *p = bindQ;
-    for(p;p!=NULL;++p,++size);
+    for(p;p!=NULL;p=p->next,++size);
 }
 
 void FiTranQueue::insert(TranBindQueue *TBQ) {
@@ -478,7 +637,7 @@ void FiTranQueue::insert(TranBindQueue *TBQ) {
 void FiTranQueue::getSize(int &size) {
     size = 0;
     TranBindQueue *p;
-    for(p=fireQ;p!=NULL;++p,++size);
+    for(p=fireQ;p!=NULL;p=p->next,++size);
 }
 
 /*****************************************************************/
@@ -516,7 +675,15 @@ CPN_RG::~CPN_RG() {
     delete [] markingtable;
 }
 
+/*function：得到一个新的节点后，把这个节点加入到哈希表中；
+ * Logics:
+ * 1.计算该节点的哈希值；
+ * 2.根据哈希值得到索引值，索引值为：hashvalue & size；
+ * 3.根据索引值，插入到链式哈希的相应链中；
+ * 4.维护nodecount；
+ * */
 void CPN_RG::addRGNode(CPN_RGNode *mark) {
+    mark->numid = nodecount;
     index_t hashvalue = mark->Hash(weight);
     index_t size = CPNRGTABLE_SIZE-1;
     hashvalue = hashvalue & size;
@@ -529,13 +696,22 @@ void CPN_RG::addRGNode(CPN_RGNode *mark) {
     nodecount++;
 }
 
+ /*function:得到可达图的初始节点
+  * Logics:
+  * 1.遍历库所表的每一个库所，对于每一个库所，将这个库所的initMarking链复制到initnode.marking[i]中:
+  * 2.遍历initMarking链的每一个Tokens，复制这个Tokens并插入到initnode.marking[i]链中；
+  * 3.得到新状态后，不要忘记立马计算每一个库所的哈希值；
+  * 4.将初始状态加入到哈西表中
+  * */
 CPN_RGNode *CPN_RG::CPNRGinitialnode() {
     initnode = new CPN_RGNode;
+    //遍历每一个库所
     for(int i=0;i<placecount;++i)
     {
         CPlace &pp = cpnet->place[i];
         MarkingMeta &mm = initnode->marking[i];
 
+        //遍历每一个Tokens
         for(int j=0;j<pp.metacount;++j)
         {
             if(pp.tid!=productsort)
@@ -555,14 +731,82 @@ CPN_RGNode *CPN_RG::CPNRGinitialnode() {
         mm.Hash();
     }
     addRGNode(initnode);
+    return initnode;
 }
 
-CPN_RGNode *CPN_RG::CPNRGcreatenode(CPN_RGNode *mark, int tranxnum, bool &exist) {
+/*function:根据当前状态，以及当前状态下可发生变迁的一个绑定
+ * 计算得到一个新的状态
+ * Logics:
+ * 1.首相将旧状态复制给新状态
+ * 2.可发生变迁的前继库所减去弧上的值（多重集的减法）
+ * 3.可发生变迁的后继库所加上弧上的值（要先计算后继弧的多重集，然后做多重集的加法）
+ * 4.计算新状态的每一个MarkingMeta的Hash；
+ * 5.判断是否为已存在的节点；
+ * */
+CPN_RGNode *CPN_RG::CPNRGcreatenode(CPN_RGNode *mark, TranBindQueue *tbq, bool &exist) {
 
-    return nullptr;
+    if(tbq->tranid == 2)
+        int i = 0;
+    if(tbq->bindptr == NULL)
+        return NULL;
+
+    CPN_RGNode *newmark = new CPN_RGNode;
+    *newmark = *mark;
+    CTransition &trans = cpnet->transition[tbq->tranid];
+    vector<CSArc>::iterator front;
+    int i;
+    for(i=0,front=trans.producer.begin();front!=trans.producer.end();++front,++i)
+    {
+        MINUS(newmark->marking[front->idx],tbq->bindptr->arcsMultiSet[i]);
+    }
+    vector<CSArc>::iterator rear;
+    MarkingMeta *mm = new MarkingMeta[trans.consumer.size()];
+    for(i=0,rear=trans.consumer.begin();rear!=trans.consumer.end();++rear,++i)
+    {
+        mm[i].initiate(cpnet->place[rear->idx].tid,cpnet->place[rear->idx].sid);
+        if(cpnet->place[rear->idx].tid == productsort)
+        {
+            int psnum = 0;
+            SORTID sid = cpnet->place[rear->idx].sid;
+            psnum = sorttable.productsort[sid].sortnum;
+            computeArcEXP(rear->arc_exp,mm[i],tbq->bindptr->varvec,psnum);
+        }
+        else{
+            computeArcEXP(rear->arc_exp,mm[i],tbq->bindptr->varvec);
+        }
+        PLUS(newmark->marking[rear->idx],mm[i]);
+    }
+    delete [] mm;
+    tbq->bindptr = tbq->bindptr->next;
+
+    newmark->selfcheck();
+
+    for(int i=0;i<placecount;++i)
+    {
+        newmark->marking[i].Hash();
+    }
+    CPN_RGNode *existnode =NULL;
+    exist = NodeExist(newmark,existnode);
+
+    if(!exist)
+    {
+        addRGNode(newmark);
+        cout<<"M"<<mark->numid<<"[>"<<trans.id;
+        newmark->printMarking();
+        cout<<"***NODECOUNT:"<<this->nodecount<<"***"<<endl;
+        return newmark;
+    }
+    else
+    {
+//        cout<<"----------------------------------"<<endl;
+//        cout<<"M"<<mark->numid<<"[>"<<trans.id<<" M"<<existnode->numid<<endl;
+//        cout<<"----------------------------------"<<endl;
+        delete newmark;
+        return NULL;
+    }
 }
 
-bool CPN_RG::NodeExist(CPN_RGNode *mark) {
+bool CPN_RG::NodeExist(CPN_RGNode *mark,CPN_RGNode *&existmark) {
     index_t hashvalue = mark->Hash(weight);
     index_t size = CPNRGTABLE_SIZE-1;
     hashvalue = hashvalue & size;
@@ -574,8 +818,10 @@ bool CPN_RG::NodeExist(CPN_RGNode *mark) {
         if(*p == *mark)
         {
             exist = true;
+            existmark = p;
             break;
         }
+        p=p->next;
     }
     return exist;
 }
@@ -584,278 +830,147 @@ bool CPN_RG::NodeExist(CPN_RGNode *mark) {
  * FiTranQueue:可发生变迁队列，FiTranQueue{{TranBindQueue}->{TranBindQueue}}
  * TranBindQueue：可发生变迁，里面还有所有的能使其发生的绑定队列，{{Bindind}->{Bindind}}
  * Bindind:变量的绑定，一个变量向量，如<v1=c1,v2=c2,v3=c3,...>
- *
- * persudo:
- * FOR Trans in cpnet->transition
- *  CREATE a TranBindQueue for Trans;
- *  initiate all Trans.producer CSArc;
- *  //finding all possible bindings
- *  WHILE(...)
- *      //find a binding
- *      CREATE a Binding bb
- *      FOR every arc of Trans' producer
- *          Give arc a color;
- *      END FOR
- *      IF successfully find bb
- *          COMPUTE ALL arc's express;
- *          Check if Place.token > arc_express;
- *          Check if guard_express;
- *          IF(satisfy both)
- *
- *          END IF
- *      END
- *  END WHILE
- * END FOR
- *
- * !!!!!!有的变迁根本不需要绑定
  * */
-void CPN_RG::gerFireableTranx(CPN_RGNode *curnode,FiTranQueue &fireableTs){
+void CPN_RG::getFireableTranx(CPN_RGNode *curnode,FiTranQueue &fireableTs){
     //遍历每一个变迁，看其能否发生
     for(int i=0;i<transitioncount;++i)
     {
-        VARFLAG = false;
         TranBindQueue *tbq = new TranBindQueue;
         tbq->tranid = i;
 
         CTransition &tran = cpnet->transition[i];
-        //在寻找该变迁的所有绑定之前需要对该变迁的所有前继弧初始化
-        vector<CSArc>::iterator csiter;
-        for(csiter=tran.producer.begin();csiter!=tran.producer.end();++csiter)
+        //预先判断
+        vector<CSArc>::iterator piter;
+        bool possiblefire = true;
+        for(piter=tran.producer.begin();piter!=tran.producer.end(); ++piter)
         {
-            csiter->arc_exp.initiate(csiter->arc_exp.root);
-        }
-
-        //对于变迁tran,寻找他的每一种绑定，放在tbq中
-        while(true)
-        {
-            //在寻找一种绑定时，需要遍历该变迁的全部前继库所和弧
-            Bindind *bb = new Bindind;
-            bool success = true;   //success表示是否着色成功
-            vector<CSArc>::iterator iter;
-            for(iter=tran.producer.begin();iter!=tran.producer.end();++iter)
+            if(curnode->marking[piter->idx].colorcount == 0)
             {
-                COLORFLAG = 0;
-                giveArcColor(iter->arc_exp.root,curnode,bb->varvec,iter->idx,0);
-                if(COLORFLAG = -1)
-                {
-                    success = false;
-                    break;
-                }
-            }
-
-            if(success) //着色成功后，判断该着色是否合法
-            {
-                //计算弧的颜色多重集
-                bool firebound = true;
-
-                //将每一个弧表达式转化为一个多重集，多重集用MarkingMeta表示
-                //申请一个MarkingMeta数组，mm[i]就表示变迁tran第i个前继弧的multi-set
-                MarkingMeta *mm = new MarkingMeta[tran.producer.size()];
-                vector<CSArc>::iterator it;
-                int i;
-                for(i=0,it=tran.producer.begin();it!=tran.producer.end();++i,++it)
-                {
-                    //计算每一个前继弧的多重集，并判断个前继库所的包含关系
-                    type ptid = cpnet->place[it->idx].tid;
-                    SORTID psid = cpnet->place[it->idx].sid;
-                    mm[i].initiate(ptid,psid);
-
-                    int psnum;
-                    if(ptid == productsort){
-                        psnum = sorttable.productsort[psid].sortnum;
-                    }
-                    else
-                        psnum = 0;
-                    computeArcEXP(it->arc_exp,mm[i],psnum);
-
-                    //判断前继库所中的token和弧上表达式的关系
-                    if(curnode->marking[it->idx] >= mm[i])
-                        continue;
-                    else
-                    {
-                        firebound = false;
-                        break;
-                    }
-                }
-                if(!firebound)
-                {
-                    delete bb;
-                    delete [] mm;
-                    if(!VARFLAG)   //没有变量
-                        break;
-                    else
-                        continue;
-                }
-
-                if(!tran.hasguard) {
-                    continue;
-                }
-
-                //判断guard函数
-                judgeGuard(tran.guard.root->left,bb->varvec);
-                if(tran.guard.root->left->mytruth)
-                {
-                    //变迁真的能发生！
-                    bb->arcsMultiSet = mm;
-                    tbq->insert(bb);
-                }
-                else
-                {
-                    delete bb;
-                    delete [] mm;
-                }
-
-                //如果这个变迁不需要绑定，则只要进行一次
-                if(!VARFLAG)
-                    break;
-            }
-            else
+                possiblefire = false;
                 break;
+            }
         }
 
-        //看看该变迁是否有可使能的
-        if(tbq->bindQ == NULL)
-        {
-            delete tbq;
-        }
-        else {
+        if(!possiblefire)
+            continue;
+
+        int level=0;
+        Bindind *bind = new Bindind;
+        getTranxBinding(curnode,tran,level,bind,*tbq);
+        int firesize;
+        tbq->getSize(firesize);
+        if(firesize!=0) {
             tbq->initiate();
             fireableTs.insert(tbq);
         }
+        else {
+            delete tbq;
+        }
     }
+    fireableTs.initiate();
 }
 
-/*功能说明：
- * 给弧表达式（弧的抽象语法树）上的变量（变量节点）赋值，并反映在变量向量中。
- * */
-void CPN_RG::giveArcColor(multiset_node *expnode,CPN_RGNode *curnode,VARID *varvec,index_t placeidx,int psindex) {
-    if(COLORFLAG == -1)
+
+void CPN_RG::getTranxBinding(CPN_RGNode *curnode,const CPN_Transition &tt,int level,Bindind *&bind,TranBindQueue &tbq)
+{
+    if(level >= tt.relvararray.size())
+    {
+        MarkingMeta *mm = new MarkingMeta[tt.producer.size()];
+        vector<CSArc>::const_iterator preiter;
+        int j;
+        bool firebound = true;
+        for(j=0,preiter=tt.producer.begin();preiter!=tt.producer.end();++j,++preiter)
+        {
+            //计算每一个前继弧的多重集，并判断个前继库所的包含关系
+            type ptid = cpnet->place[preiter->idx].tid;
+            SORTID psid = cpnet->place[preiter->idx].sid;
+            mm[j].initiate(ptid,psid);
+
+            int psnum;
+            if(ptid == productsort){
+                psnum = sorttable.productsort[psid].sortnum;
+            }
+            else
+                psnum = 0;
+            computeArcEXP(preiter->arc_exp,mm[j],bind->varvec,psnum);
+            if(colorflag==false)
+            {
+                firebound = false;
+                break;
+            }
+
+            //判断前继库所中的token和弧上表达式的关系
+            if(curnode->marking[preiter->idx] >= mm[j])
+                continue;
+            else
+            {
+                firebound = false;
+                break;
+            }
+        }
+
+        if(firebound)
+        {
+            //判断guard函数
+            if(tt.hasguard)
+            {
+                judgeGuard(tt.guard.root->left,bind->varvec);
+                firebound = tt.guard.root->left->mytruth;
+            }
+            if(firebound)
+            {
+                bind->arcsMultiSet = mm;
+                tbq.insert(bind);
+                Bindind *pp = new Bindind;
+                memcpy(pp->varvec,bind->varvec, sizeof(COLORID)*varcount);
+                bind = pp;
+            }
+        }
         return;
-    if(expnode->mytype == var)
-    {
-        VARFLAG = true;
-        int res;
-        res = giveVarColor(expnode,curnode->marking[placeidx],varvec,psindex);
-        if(res == -1)
-            COLORFLAG = -1;
     }
-    else if(expnode->myname == "tuple")
+
+    COLORID i=0;
+    SORTID sid = tt.relvararray[level].sid;
+    COLORID end = sorttable.usersort[sid].feconstnum;
+    for(i;i<end;++i)
     {
-        giveArcColor(expnode->leftnode,curnode,varvec,placeidx,psindex);
-        if(COLORFLAG == -1)
-            return;
-        giveArcColor(expnode->rightnode,curnode,varvec,placeidx,psindex+1);
-    }
-    else
-    {
-        if(expnode->leftnode != NULL)
-        {
-            giveArcColor(expnode->leftnode,curnode,varvec,placeidx,psindex);
-            if(COLORFLAG == -1)
-                return;
-        }
-        if(expnode->rightnode != NULL)
-        {
-            giveArcColor(expnode->rightnode,curnode,varvec,placeidx,psindex);
-        }
+        bind->varvec[tt.relvararray[level].vid] = i;
+        getTranxBinding(curnode,tt,level+1,bind,tbq);
     }
 }
 
-/*功能说明：
- * 给弧表达式（弧的抽象语法树）上的变量（变量节点）赋值，并反映在变量向量中。
- * 参数说明：
- * expnode:当前需要赋值的变量节点，需要该节点的name来索取该变量在数组中的索引位置
- * const MarkingMeta &mm：该变量赋值所参考的库所的token；
- * VARID *varvec：变量值的向量，<v1=c1,v2=c2,v3=c3,...>，赋值后需要体现在该向量中；
- * int psindex：如果是productsort类型，需要知道该变量在交类型的第几个
+void CPN_RG::computeArcEXP(const arc_expression &arcexp,MarkingMeta &mm,COLORID *varcolors,int psnum) {
+    colorflag = true;
+    computeArcEXP(arcexp.root->leftnode,mm,varcolors,psnum);
+}
+
+/*function:将未绑定过的抽象语法树转化为MarkingMeta
  * */
-int CPN_RG::giveVarColor(multiset_node *expnode,const MarkingMeta &mm,VARID *varvec,int psindex) {
-    if(mm.tid == productsort)
-    {
-        //检查是否已经绑定过
-        map<string,VARID>::iterator viter;
-        viter = cpnet->mapVariable.find(expnode->myname);
-        VARID vid = viter->second;
-        if(varvec[vid] != MAXSHORT)
-        {
-            //已经绑定过
-            expnode->number = varvec[vid];
-            return 0;
-        }
-
-        //绑定一个值
-        int &bindptr = expnode->bindptr;
-        //检查是否还有未绑定的值
-        if(bindptr < mm.colorcount){
-            //取出一个值
-            SORTID sid = mm.sid;
-            int sortnum = sorttable.productsort[sid].sortnum;
-            COLORID *cid = new COLORID[sortnum];
-
-            Tokens *p = mm.tokenQ->next;
-            for(int i=0;i<bindptr;++i,p=p->next)
-            p->tokens->getColor(cid,sortnum);
-            //绑定值
-            expnode->number = cid[psindex];
-            varvec[vid] = cid[psindex];
-
-            bindptr++;
-            return 0;
-        }
-        else{
-            //已经全部绑定完了
-            return -1;
-        }
-    }
-    else if(mm.tid == usersort)
-    {
-        //检查是否已经绑定过
-        map<string,VARID>::iterator viter;
-        viter = cpnet->mapVariable.find(expnode->myname);
-        VARID vid = viter->second;
-        if(varvec[vid] != MAXSHORT)
-        {
-            //已经绑定过
-            expnode->number = varvec[vid];
-            return 0;
-        }
-
-        //绑定一个值
-        int &bindptr = expnode->bindptr;
-        //检查是否还有未绑定的值
-        if(bindptr < mm.colorcount){
-            //取出一个值
-            COLORID cid;
-            Tokens *p=mm.tokenQ->next;
-            for(int i=0;i<bindptr;++i,p=p->next);
-            p->tokens->getColor(cid);
-            //绑定值
-            expnode->number = cid;
-            varvec[vid] = cid;
-            bindptr++;
-            return 0;
-        }
-        else{
-            //已经全部绑定完了
-            return -1;
-        }
-    }
-    else if(mm.tid == dot)
-    {
-        //DOT类型不需要绑定
-        return 0;
-    }
-}
-
-void CPN_RG::computeArcEXP(const arc_expression &arcexp,MarkingMeta &mm,int psnum) {
-    computeArcEXP(arcexp.root->leftnode,mm,psnum);
-}
-
-void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
+void CPN_RG::computeArcEXP(meta *expnode,MarkingMeta &mm,COLORID *varcolors,int psnum) {
+    if(colorflag == false)
+        return;
     if(expnode->myname == "add")
     {
-        computeArcEXP(expnode->leftnode,mm);
-        computeArcEXP(expnode->rightnode,mm);
+        computeArcEXP(expnode->leftnode,mm,varcolors,psnum);
+        if(expnode->rightnode!=NULL)
+            computeArcEXP(expnode->rightnode,mm,varcolors,psnum);
+    }
+    else if(expnode->myname == "subtract")
+    {
+        MarkingMeta mm1,mm2;
+        mm1.initiate(mm.tid,mm.sid);
+        mm2.initiate(mm.tid,mm.sid);
+        computeArcEXP(expnode->leftnode,mm1,varcolors,psnum);
+        computeArcEXP(expnode->rightnode,mm2,varcolors,psnum);
+        if(MINUS(mm1,mm2)==0)
+        {
+            colorflag = false;
+            return;
+        }
+        else
+        {
+            MarkingMetacopy(mm,mm1,mm.tid,mm.sid);
+        }
     }
     else if(expnode->myname == "numberof")
     {
@@ -873,13 +988,73 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
         {
             //tuple取出来的是一个数组cid
             COLORID *cid = new COLORID[psnum];
-            getTupleColor(color,cid,0);
+            getTupleColor(color,cid,varcolors,0);
             //创建一个colortoken，插入到mm中
             Tokens *t = new Tokens;
             t->initiate(num,productsort,psnum);
             t->tokens->setColor(cid,psnum);
             mm.insert(t);
             delete [] cid;
+        }
+        else if(color->myname == "all")
+        {
+            meta *sortname = color->leftnode;
+            map<string,MSI>::iterator siter;
+            siter = sorttable.mapSort.find(sortname->myname);
+            SHORTNUM feconstnum = sorttable.usersort[siter->second.sid].feconstnum;
+            for(COLORID i=0;i<feconstnum;++i)
+            {
+                Tokens *p = new Tokens;
+                p->initiate(num,usersort);
+                p->tokens->setColor(i);
+                mm.insert(p);
+            }
+        }
+        else if(color->myname == "successor")
+        {
+            SHORTNUM feconstnum;
+            if(color->leftnode->mytype == var)
+            {
+                map<string,VARID>::iterator viter;
+                viter = cpnet->mapVariable.find(color->leftnode->myname);
+                SORTID sid = cpnet->vartable[viter->second].sid;
+                feconstnum = sorttable.usersort[sid].feconstnum;
+
+                COLORID cid = (varcolors[viter->second]+1)%feconstnum;
+                Tokens *p = new Tokens;
+                p->initiate(num,usersort);
+                p->tokens->setColor(cid);
+                mm.insert(p);
+            }
+            else
+            {
+                cerr<<"ERROR!CPN_RG::computeArcEXP"<<endl;
+            }
+        }
+        else if(color->myname == "predecessor")
+        {
+            SHORTNUM feconstnum;
+            if(color->leftnode->mytype == var)
+            {
+                map<string,VARID>::iterator viter;
+                viter = cpnet->mapVariable.find(color->leftnode->myname);
+                SORTID sid = cpnet->vartable[viter->second].sid;
+                feconstnum = sorttable.usersort[sid].feconstnum;
+
+                COLORID cid;
+                if(varcolors[viter->second] == 0)
+                    cid = feconstnum-1;
+                else
+                    cid = varcolors[viter->second]-1;
+                Tokens *p = new Tokens;
+                p->initiate(num,usersort);
+                p->tokens->setColor(cid);
+                mm.insert(p);
+            }
+            else
+            {
+                cerr<<"ERROR!CPN_RG::computeArcEXP"<<endl;
+            }
         }
         else if(color->mytype == delsort)
         {
@@ -888,6 +1063,7 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
             {
                 p->initiate(num,dot);
                 mm.insert(p);
+                return;
             }
 
             COLORID cid;
@@ -901,12 +1077,17 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
         }
         else if(color->mytype == var)
         {
-            COLORID cid = color->number;
+            COLORID cid;
+            map<string,VARID>::iterator viter;
+            viter = cpnet->mapVariable.find(color->myname);
+            cid = varcolors[viter->second];
             Tokens *p = new Tokens;
             p->initiate(num,usersort);
             p->tokens->setColor(cid);
             mm.insert(p);
         }
+        else
+            cerr<<"ERROR!CPN_RG::computeArcEXP @ line 1186"<<endl;
     }
     else{
         cerr<<"[CPN_RG::computeArcEXP] ERROR:Unexpected arc_expression node"<<expnode->myname<<endl;
@@ -914,17 +1095,16 @@ void CPN_RG::computeArcEXP(meta *expnode, MarkingMeta &mm,int psnum) {
     }
 }
 
-void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,int ptr) {
+/*function：得到一个未绑定过的语法树中ProductSort类型的颜色（元祖）
+ * */
+void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,COLORID *varcolors,int ptr) {
     if(expnode->mytype == var)
     {
         //1.首先检查该变量是否已经绑定
         //2.取出color，放在数组cid[ptr]；
-        if(expnode->number == -1)
-        {
-            cerr<<"[CPN_RG::getTupleColor] ERROR:Variable "<<expnode->myname<<" unbounded!"<<endl;
-            exit(-1);
-        }
-        cid[ptr] = expnode->number;
+        map<string,VARID>::iterator viter;
+        viter = cpnet->mapVariable.find(expnode->myname);
+        cid[ptr] = varcolors[viter->second];
     }
     else if(expnode->mytype == delsort)
     {
@@ -935,8 +1115,8 @@ void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,int ptr) {
     }
     else if(expnode->myname == "tuple")
     {
-        getTupleColor(expnode->leftnode,cid,ptr);
-        getTupleColor(expnode->rightnode,cid,ptr+1);
+        getTupleColor(expnode->leftnode,cid,varcolors,ptr);
+        getTupleColor(expnode->rightnode,cid,varcolors,ptr+1);
     }
     else if(expnode->myname == "successor")
     {
@@ -944,17 +1124,20 @@ void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,int ptr) {
         if(expnode->leftnode->mytype == var)
         {
             map<string,VARID>::iterator viter;
-            viter = cpnet->mapVariable.find(expnode->leftnode->myname);
+            viter = cpnet->mapVariable.find(expnode->leftnode->myname);  //根据变量找到变量的索引值
             SORTID sid = cpnet->vartable[viter->second].sid;
             feconstnum = sorttable.usersort[sid].feconstnum;
+
+            cid[ptr] = (varcolors[viter->second]+1)%feconstnum;
         }
         else if(expnode->leftnode->mytype == delsort)
         {
             map<string,MCI>::iterator citer;
             citer = sorttable.mapColor.find(expnode->myname);
             feconstnum = sorttable.usersort[citer->second.sid].feconstnum;
+
+            cid[ptr] = (citer->second.cid+1)%feconstnum;
         }
-        cid[ptr] = ((expnode->leftnode->number)+1)%feconstnum;
     }
     else if(expnode->myname == "predecessor")
     {
@@ -965,20 +1148,36 @@ void CPN_RG::getTupleColor(meta *expnode,COLORID *cid,int ptr) {
             viter = cpnet->mapVariable.find(expnode->leftnode->myname);
             SORTID sid = cpnet->vartable[viter->second].sid;
             feconstnum = sorttable.usersort[sid].feconstnum;
+
+            COLORID ccc = varcolors[viter->second];
+
+            if(ccc == MAXSHORT)
+            {
+                cerr<<"[CPN_RG::getTupleColor]ERROR：variable "<<expnode->leftnode->myname<<" is not bounded."<<endl;
+                exit(-1);
+            }
+
+            if(ccc == 0)
+                cid[ptr] = feconstnum-1;
+            else
+                cid[ptr] = ccc-1;
         }
         else if(expnode->leftnode->mytype == delsort)
         {
             map<string,MCI>::iterator citer;
-            citer = sorttable.mapColor.find(expnode->myname);
+            citer = sorttable.mapColor.find(expnode->myname);  //根据该变量名字找到该变量
             feconstnum = sorttable.usersort[citer->second.sid].feconstnum;
+
+            if(citer->second.cid == 0)
+                cid[ptr] = feconstnum-1;
+            else
+                cid[ptr] = citer->second.cid-1;
         }
-        if(expnode->leftnode->number == 0)
-            cid[ptr] = feconstnum-1;
-        else
-            cid[ptr] = (expnode->leftnode->number)-1;
     }
 }
 
+/*function：判断一个变迁的Guard函数（抽象语法树）是否为真
+ * */
 void CPN_RG::judgeGuard(CTN *node,COLORID *cid) {
     switch(node->mytype)
     {
@@ -1090,5 +1289,44 @@ void CPN_RG::judgeGuard(CTN *node,COLORID *cid) {
             node->cid = citer->second.cid;
             break;
         }
+        default:{
+            cerr<<"[judgeGuard] Unrecognized node in condition tree"<<endl;
+            exit(-1);
+        }
     }
 }
+
+/*function:生成完整的可达图
+ * Logics:
+ * 1.计算当前状态下的所有可发生变迁（每个变迁的每种可发生绑定）
+ * 2.两层循环：对于所有的可发生变迁，以及该变迁下的每一种可发生绑定
+ * 3.计算新的状态，并判断该状态是否为重复状态
+ * 4.若不是重复状态，则加入到哈希表中。
+ * */
+void CPN_RG::Generate(CPN_RGNode *mark) {
+    if(mark->numid == 96)
+        int i=0;
+    FiTranQueue *fireableTs = new FiTranQueue;
+    getFireableTranx(mark,*fireableTs);
+    fireableTs->initiate();
+    int firesize;
+    fireableTs->getSize(firesize);
+    while(fireableTs->fireptr)
+    {
+        fireableTs->fireptr->initiate();
+        int bindsize;
+        fireableTs->fireptr->getSize(bindsize);
+        bool exist;
+        while(fireableTs->fireptr->bindptr)
+        {
+            CPN_RGNode *nextnode = CPNRGcreatenode(mark,fireableTs->fireptr,exist);
+            if(!exist)
+            {
+                Generate(nextnode);
+            }
+        }
+        fireableTs->fireptr = fireableTs->fireptr->next;
+    }
+    delete fireableTs;
+}
+

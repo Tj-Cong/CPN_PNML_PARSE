@@ -2,6 +2,7 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/condition_tree.h" line="81" />
+    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="19" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
@@ -15,18 +16,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af969263-0f25-481c-abb4-fae0b91fc187" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/hecong.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notice.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPN.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CPN.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPN.h" beforeDir="false" afterPath="$PROJECT_DIR$/CPN.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CPN_RG.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CPN_RG.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CPN_RG.h" beforeDir="false" afterPath="$PROJECT_DIR$/CPN_RG.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/CPN.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/depend.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CPN_PNML_PARSE" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CPN_PNML_PARSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/model2.pnml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/model2.pnml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/model3.pnml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/model3.pnml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/model4.pnml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/model4.pnml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/condition_tree.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/condition_tree.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/condition_tree.h" beforeDir="false" afterPath="$PROJECT_DIR$/condition_tree.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,143 +47,97 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.49805635">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/main.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/CPN.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="6750">
-                  <caret line="250" column="6" selection-start-line="250" selection-start-column="6" selection-end-line="250" selection-end-column="6" />
-                  <folding>
-                    <element signature="e#131#150#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/condition_tree.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1059">
-                  <caret line="46" column="6" selection-start-line="46" selection-start-column="6" selection-end-line="46" selection-end-column="6" />
-                  <folding>
-                    <element signature="e#41#60#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/condition_tree.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="891">
-                  <caret line="296" column="33" selection-start-line="296" selection-start-column="22" selection-end-line="296" selection-end-column="33" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/CPN_RG.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="405">
-                  <caret line="309" lean-forward="true" selection-start-line="309" selection-end-line="309" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/CPN.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="677" column="5" selection-start-line="677" selection-start-column="5" selection-end-line="677" selection-end-column="5" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/cmake-build-debug/model3.pnml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="384">
-                  <caret line="89" column="31" selection-start-line="89" selection-start-column="31" selection-end-line="89" selection-end-column="31" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/cmake-build-debug/model4.pnml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="627">
-                  <caret line="6029" column="50" lean-forward="true" selection-start-line="6029" selection-start-column="41" selection-end-line="6029" selection-end-column="50" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/CPN_RG.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3192">
-                  <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
-                  <folding>
-                    <element signature="e#106#122#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/CPN_RG.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="497">
-                  <caret line="705" column="17" lean-forward="true" selection-start-line="705" selection-start-column="17" selection-end-line="705" selection-end-column="17" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CPN.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7533">
+              <caret line="279" column="26" selection-start-line="279" selection-start-column="26" selection-end-line="279" selection-end-column="26" />
+              <folding>
+                <element signature="e#131#150#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cmake-build-debug/model1.pnml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="12" column="32" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CPN.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19413">
+              <caret line="719" column="35" selection-start-line="719" selection-start-column="35" selection-end-line="719" selection-end-column="35" />
+              <folding>
+                <element signature="e#79#190#0" />
+                <element signature="e#192#1415#0" />
+                <element signature="e#1417#1698#0" />
+                <element signature="e#1700#1971#0" />
+                <element signature="e#1973#2235#0" />
+                <element signature="e#2883#2978#0" />
+                <element signature="e#2979#8328#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="687">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cmake-build-debug/CPN.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pro</find>
-      <find>Weight1</find>
-      <find>&lt;condition&gt;</find>
-      <find>NextSiblingElement</find>
-      <find>pclass</find>
-      <find>useroperat</find>
-      <find>transition</find>
-      <find>arc</find>
-      <find>mapSort</find>
-      <find>type</find>
-      <find>extMemAcc</find>
-      <find>pDomainId</find>
       <find>traincontext</find>
       <find>dot</find>
       <find>pp</find>
-      <find>all</find>
       <find>Token</find>
       <find>initiate</find>
       <find>metacount</find>
       <find>feconstnum</find>
-      <find>add</find>
       <find>greater</find>
       <find>suc</find>
       <find>succ</find>
       <find>new Tokens</find>
+      <find>sorttable</find>
+      <find>extMem</find>
+      <find>insert</find>
+      <find>arcnodetype</find>
+      <find>computeArcEXP</find>
+      <find>Tokenscopy</find>
+      <find>getTupleColor</find>
+      <find>vartable</find>
+      <find>sortname</find>
+      <find>success</find>
+      <find>judgeGuard</find>
+      <find>transi</find>
+      <find>all</find>
+      <find>add</find>
+      <find>MINU</find>
+      <find>subtract</find>
+      <find>&quot;add&quot;</find>
+      <find>MINUS</find>
+      <find>sub</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -187,13 +148,17 @@
       <list>
         <option value="$PROJECT_DIR$/cpn_pnml_template.xml" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/CPN.cpp" />
+        <option value="$PROJECT_DIR$/notice.txt" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/place_info.txt" />
         <option value="$PROJECT_DIR$/CPN.h" />
-        <option value="$PROJECT_DIR$/condition_tree.cpp" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/model10.pnml" />
+        <option value="$PROJECT_DIR$/cmake-build-debug/model.pnml" />
         <option value="$PROJECT_DIR$/condition_tree.h" />
+        <option value="$PROJECT_DIR$/condition_tree.cpp" />
         <option value="$PROJECT_DIR$/CPN_RG.h" />
         <option value="$PROJECT_DIR$/CPN_RG.cpp" />
+        <option value="$PROJECT_DIR$/CPN.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
   </component>
@@ -209,7 +174,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -226,6 +190,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -285,7 +250,19 @@
       <workItem from="1575953378592" duration="27138000" />
       <workItem from="1576098009602" duration="2621000" />
       <workItem from="1576298930152" duration="57329000" />
-      <workItem from="1576499828957" duration="9735000" />
+      <workItem from="1576499828957" duration="9778000" />
+      <workItem from="1576583851576" duration="4519000" />
+      <workItem from="1577766650412" duration="4749000" />
+      <workItem from="1577855209889" duration="8668000" />
+      <workItem from="1577904061024" duration="232000" />
+      <workItem from="1577875517845" duration="4644000" />
+      <workItem from="1578051432831" duration="6314000" />
+      <workItem from="1578111753284" duration="46889000" />
+      <workItem from="1578286446997" duration="2730000" />
+      <workItem from="1578290247616" duration="4020000" />
+      <workItem from="1578301220848" duration="19511000" />
+      <workItem from="1578385955584" duration="100000" />
+      <workItem from="1578386093513" duration="105000" />
     </task>
     <task id="LOCAL-00001" summary="Beta1.0(still in debug phase)">
       <created>1575867283382</created>
@@ -308,32 +285,47 @@
       <option name="project" value="LOCAL" />
       <updated>1576421204790</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="CPN reachability tree generation is on the way.">
+      <created>1576564786928</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1576564786928</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="224468000" />
+    <option name="totallyTimeSpent" value="326992000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="32" width="2493" height="1408" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15273775" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1762042" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32983872" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.26935485" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.29354838" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.23145162" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32983872" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.19274193" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.19354838" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32983872" />
       <window_info anchor="bottom" id="CMake" order="11" />
-      <window_info active="true" anchor="bottom" id="Messages" order="12" visible="true" weight="0.20725806" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.21612903" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -415,9 +407,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>35</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/CPN.cpp</url>
-          <line>378</line>
-          <option name="timeStamp" value="12" />
+          <line>365</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>30</line>
+          <option name="timeStamp" value="59" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -476,58 +478,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tinyxml.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17415">
-          <caret line="645" selection-start-line="645" selection-end-line="645" />
-          <folding>
-            <element signature="e#23536#23823#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tinyxml.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9801">
           <caret line="363" selection-start-line="363" selection-end-line="363" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model2.pnml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="1444" column="51" selection-start-line="1444" selection-start-column="51" selection-end-line="1444" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model1.pnml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="152" column="38" lean-forward="true" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/place_info.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CPN.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CPN.dot">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="724">
-          <caret line="29" column="54" selection-start-line="29" selection-start-column="54" selection-end-line="29" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/sorts_info.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="3" column="24" lean-forward="true" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -538,41 +492,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
+    <entry file="file://$PROJECT_DIR$/notice.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+        <state relative-caret-position="324">
+          <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CPN.h">
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/trans_var.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6750">
-          <caret line="250" column="6" selection-start-line="250" selection-start-column="6" selection-end-line="250" selection-end-column="6" />
+        <state relative-caret-position="135">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/c++/7/bits/stl_iterator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="799" selection-start-line="799" selection-end-line="799" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/place_info.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/sorts_info.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="15" column="20" lean-forward="true" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CPN.dot">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="908">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tinyxml.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="486" selection-start-line="486" selection-end-line="486" />
           <folding>
-            <element signature="e#131#150#0" expanded="true" />
+            <element signature="e#23536#23823#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model3.pnml">
+    <entry file="file://$PROJECT_DIR$/tinystr.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="89" column="31" selection-start-line="89" selection-start-column="31" selection-end-line="89" selection-end-column="31" />
+        <state relative-caret-position="195">
+          <caret line="127" selection-start-line="127" selection-end-line="127" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model4.pnml">
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model.pnml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="6029" column="50" lean-forward="true" selection-start-line="6029" selection-start-column="41" selection-end-line="6029" selection-end-column="50" />
+        <state relative-caret-position="390">
+          <caret line="342" column="16" lean-forward="true" selection-start-line="342" selection-start-column="16" selection-end-line="342" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/condition_tree.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1059">
-          <caret line="46" column="6" selection-start-line="46" selection-start-column="6" selection-end-line="46" selection-end-column="6" />
+        <state relative-caret-position="583">
+          <caret line="110" column="9" selection-start-line="110" selection-start-column="9" selection-end-line="110" selection-end-column="9" />
           <folding>
             <element signature="e#41#60#0" expanded="true" />
           </folding>
@@ -581,34 +570,124 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/condition_tree.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="891">
-          <caret line="296" column="33" selection-start-line="296" selection-start-column="22" selection-end-line="296" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CPN.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="677" column="5" selection-start-line="677" selection-start-column="5" selection-end-line="677" selection-end-column="5" />
+        <state relative-caret-position="1960">
+          <caret line="430" column="31" lean-forward="true" selection-start-line="430" selection-start-column="31" selection-end-line="430" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CPN_RG.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3192">
-          <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
+        <state relative-caret-position="466">
+          <caret line="18" column="18" lean-forward="true" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
           <folding>
             <element signature="e#106#122#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CPN_RG.cpp">
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model3.pnml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="705" column="17" lean-forward="true" selection-start-line="705" selection-start-column="17" selection-end-line="705" selection-end-column="17" />
+        <state relative-caret-position="11232">
+          <caret line="416" column="32" selection-start-line="416" selection-start-column="32" selection-end-line="416" selection-end-column="32" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model4.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7668">
+          <caret line="284" column="42" selection-start-line="284" selection-start-column="28" selection-end-line="284" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model5.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3915">
+          <caret line="145" column="24" selection-start-line="145" selection-start-column="24" selection-end-line="145" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CPN_RG.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15741">
+          <caret line="583" selection-start-line="583" selection-end-line="583" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model10.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3024">
+          <caret line="112" column="12" selection-start-line="112" selection-start-column="12" selection-end-line="112" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model9.pnml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model8.pnml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model6.pnml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model7.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="273" column="62" selection-start-line="273" selection-start-column="62" selection-end-line="273" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model2.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CPN.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7533">
+          <caret line="279" column="26" selection-start-line="279" selection-start-column="26" selection-end-line="279" selection-end-column="26" />
+          <folding>
+            <element signature="e#131#150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CPN.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19413">
+          <caret line="719" column="35" selection-start-line="719" selection-start-column="35" selection-end-line="719" selection-end-column="35" />
+          <folding>
+            <element signature="e#79#190#0" />
+            <element signature="e#192#1415#0" />
+            <element signature="e#1417#1698#0" />
+            <element signature="e#1700#1971#0" />
+            <element signature="e#1973#2235#0" />
+            <element signature="e#2883#2978#0" />
+            <element signature="e#2979#8328#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/model1.pnml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" column="32" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="687">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CPN.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
   </component>
 </project>

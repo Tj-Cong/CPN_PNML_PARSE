@@ -333,7 +333,27 @@ void CPN::readPNML(char *filename) {
                 TiXmlElement *initM = pageElement->FirstChildElement("hlinitialMarking");
                 if(initM!=NULL){
                     TiXmlElement *firstoperator = initM->FirstChildElement("structure")->FirstChildElement();
-                    getInitMarking(firstoperator,pp,0);
+                    string opstr = firstoperator->Value();
+                    if(opstr == "all")
+                    {
+                        if(pp.tid!=usersort){
+                            cerr<<"ERROR @ line340. The \'all\' operator is not used for cyclicenumeration"<<endl;
+                            exit(-1);
+                        }
+                        UserSort &uu = sorttable.usersort[pp.sid];
+                        pp.initMarking = new Tokens[uu.feconstnum];
+                        pp.metacount = uu.feconstnum;
+                        COLORID i;
+                        for(i=0;i<uu.feconstnum;++i)
+                        {
+                            Tokens &t = pp.initMarking[i];
+                            t.initiate(1,usersort);
+                            t.tokens->setColor(i);
+                        }
+                    }
+                    else{
+                        getInitMarking(firstoperator,pp,0);
+                    }
                 }
                 mapPlace.insert(pair<string,index_t>(pp.id,pptr));
                 ++pptr;
@@ -342,10 +362,13 @@ void CPN::readPNML(char *filename) {
             {
                 CTransition &tt = transition[tptr];
                 tt.id = pageElement->FirstAttribute()->Value();
+                if(tt.id == "autorisation_B")
+                    int i=0;
                 TiXmlElement *condition = pageElement->FirstChildElement("condition");
                 if(condition)
                 {
                     tt.guard.constructor(condition);
+                    tt.hasguard = true;
                 }
                 else
                 {
@@ -382,6 +405,7 @@ void CPN::readPNML(char *filename) {
         if(value == "variabledecl")
         {
             vartable[vpter].id = declContent->FirstAttribute()->Value();
+            vartable[vpter].vid = vpter;
             TiXmlElement *ust = declContent->FirstChildElement();
             string ustname = ust->Value();
             if(ustname != "usersort")
@@ -414,6 +438,7 @@ void CPN::readPNML(char *filename) {
         souiter = mapPlace.find(aa.source_id);
         if(souiter == mapPlace.end())
         {
+            //souiter是一个变迁
             aa.isp2t = false;
             souiter = mapTransition.find(aa.source_id);
             tagiter = mapPlace.find(aa.target_id);
@@ -425,7 +450,7 @@ void CPN::readPNML(char *filename) {
 
             fortrans.idx = tagiter->second;
             fortrans.arc_exp = aa.arc_exp;
-            transition->consumer.push_back(fortrans);
+            transition[souiter->second].consumer.push_back(fortrans);
         }
         else
         {
@@ -672,6 +697,73 @@ void CPN::printVar() {
         outvar<<"name: "<<vartable[i].id<<endl;
         outvar<<"related sort: "<<sorttable.usersort[vartable[i].sid].id<<endl;
         outvar<<"------------------------"<<endl;
+    }
+}
+
+void CPN::setGlobalVar() {
+    ::placecount = this->placecount;
+    ::transitioncount = this->transitioncount;
+    ::varcount = this->varcount;
+}
+
+void CPN::getRelVars() {
+    for(int i=0;i<transitioncount;++i)
+    {
+        CPN_Transition &tt = transition[i];
+        vector<CSArc>::iterator preiter;
+        //遍历所有前继弧的抽象语法树，得到所有变量
+        for(preiter=tt.producer.begin();preiter!=tt.producer.end();++preiter)
+        {
+            TraArcTreeforVAR(preiter->arc_exp.root,tt.relvars);
+        }
+
+        vector<CSArc>::iterator postiter;
+        for(postiter=tt.consumer.begin();postiter!=tt.consumer.end();++postiter)
+        {
+            TraArcTreeforVAR(postiter->arc_exp.root,tt.relvars);
+        }
+
+        set<Variable>::iterator viter;
+        for(viter=tt.relvars.begin();viter!=tt.relvars.end();++viter)
+        {
+            tt.relvararray.push_back(*viter);
+        }
+    }
+}
+
+void CPN::TraArcTreeforVAR(meta *expnode, set<Variable> &relvars) {
+    if(expnode == NULL)
+        return;
+    if(expnode->mytype == var)
+    {
+        map<string,VARID>::iterator viter;
+        viter = mapVariable.find(expnode->myname);
+        VARID vid = viter->second;
+        relvars.insert(vartable[vid]);
+        return;
+    }
+    if(expnode->leftnode!=NULL)
+    {
+        TraArcTreeforVAR(expnode->leftnode,relvars);
+    }
+    if(expnode->rightnode!=NULL)
+    {
+        TraArcTreeforVAR(expnode->rightnode,relvars);
+    }
+}
+
+void CPN::printTransVar() {
+    ofstream outvar("trans_var.txt",ios::out);
+    for(int i=0;i<transitioncount;++i)
+    {
+        CPN_Transition &tt = transition[i];
+        outvar<<transition[i].id<<":";
+        set<Variable>::iterator iter;
+        for(iter=tt.relvars.begin();iter!=tt.relvars.end();++iter)
+        {
+            outvar<<" "<<iter->id;
+        }
+        outvar<<endl;
     }
 }
 

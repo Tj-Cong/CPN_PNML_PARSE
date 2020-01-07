@@ -1,0 +1,19 @@
+#1.
+main函数中在解析完PNML后记得设置全局变量：
+extern NUM_t placecount;
+extern NUM_t transitioncount;
+extern NUM_t varcount;
+extern CPN *cpnet;
+
+#2.
+要用到MarkingMeta中的tid和sid之前需要调用MarkingMeta.initiate();
+包括：MarkingMeta.insert, Hash, >=, MINUS mm1
+
+#3.
+new Tokens必须和initiate绑定或者Tokenscopy使用，如：
+resp = new Tokens;
+resp->initiate(num,usersort);
+
+#4.
+在调用CPN_RGNode.Hash之前必须要得到每一个MarkingMeta的Hashvalue；
+

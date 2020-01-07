@@ -20,6 +20,7 @@ CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o: ../tinystr.h
 CMakeFiles/CPN_PNML_PARSE.dir/condition_tree.cpp.o: ../tinyxml.h
 
 CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o: ../CPN.h
+CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o: ../CPN_RG.h
 CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o: ../condition_tree.h
 CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o: ../main.cpp
 CMakeFiles/CPN_PNML_PARSE.dir/main.cpp.o: ../tinystr.h

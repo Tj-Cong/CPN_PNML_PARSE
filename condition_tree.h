@@ -79,7 +79,7 @@ public:
  * 'predecessor'
  * */
 /***********************************************************************/
-enum arcnodetype{structure,operat,delsort,var};
+enum arcnodetype{structure,operat,delsort,var,sortclass};
 typedef struct multiset_node
 {
     /*number has multi-explanations:
@@ -94,7 +94,6 @@ typedef struct multiset_node
      * 2.as to usroperator, represents the color index
      * 3.as to var node, it represents the sort index*/
     int number = -1;
-    int bindptr = 0;
     arcnodetype mytype;
     multiset_node *leftnode = NULL;
     multiset_node *rightnode = NULL;
@@ -107,7 +106,6 @@ public:
 public:
     arc_expression();
     ~arc_expression();
-    void initiate(meta *node);
     void constructor(TiXmlElement *hlinscription);
     void build_step(TiXmlElement *elem,meta *&curnode);
     void destructor(meta *&node);

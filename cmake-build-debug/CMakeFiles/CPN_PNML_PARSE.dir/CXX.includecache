@@ -6,16 +6,14 @@
 
 #IncludeRegexTransform: 
 
-/home/hecong/文档/CPN_PNML_PARSE/CPN.cpp
-CPN.h
-/home/hecong/文档/CPN_PNML_PARSE/CPN.h
-
 /home/hecong/文档/CPN_PNML_PARSE/CPN.h
 iostream
 -
 fstream
 -
 vector
+-
+set
 -
 map
 -
@@ -24,10 +22,6 @@ sstream
 condition_tree.h
 /home/hecong/文档/CPN_PNML_PARSE/condition_tree.h
 
-/home/hecong/文档/CPN_PNML_PARSE/CPN_RG.cpp
-CPN_RG.h
-/home/hecong/文档/CPN_PNML_PARSE/CPN_RG.h
-
 /home/hecong/文档/CPN_PNML_PARSE/CPN_RG.h
 CPN.h
 /home/hecong/文档/CPN_PNML_PARSE/CPN.h
@@ -35,10 +29,8 @@ cmath
 -
 ctime
 -
-
-/home/hecong/文档/CPN_PNML_PARSE/condition_tree.cpp
-condition_tree.h
-/home/hecong/文档/CPN_PNML_PARSE/condition_tree.h
+iomanip
+-
 
 /home/hecong/文档/CPN_PNML_PARSE/condition_tree.h
 iostream
@@ -49,8 +41,10 @@ map
 -
 
 /home/hecong/文档/CPN_PNML_PARSE/main.cpp
-CPN.h
-/home/hecong/文档/CPN_PNML_PARSE/CPN.h
+sys/time.h
+-
+CPN_RG.h
+/home/hecong/文档/CPN_PNML_PARSE/CPN_RG.h
 
 /home/hecong/文档/CPN_PNML_PARSE/tinystr.h
 assert.h

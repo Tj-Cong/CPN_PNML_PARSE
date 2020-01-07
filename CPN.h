@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <set>
 #include <map>
 #include <sstream>
 #include "condition_tree.h"
@@ -30,6 +31,10 @@ class CPN;
 class SortTable;
 struct mapsort_info;
 extern SortTable sorttable;
+extern NUM_t placecount;
+extern NUM_t transitioncount;
+extern NUM_t varcount;
+extern CPN *cpnet;
 /*========================Sort==========================*/
 class Sort
 {
@@ -198,7 +203,21 @@ struct Variable
 {
     string id;
     SORTID sid;
+    VARID vid;
     type tid;
+
+    bool operator == (const Variable &var) const {
+        if(this->id == var.id)
+            return true;
+        else
+            return false;
+    }
+    bool operator < (const Variable &var) const {
+        if(this->vid < var.vid)
+            return true;
+        else
+            return false;
+    }
 };
 
 /*========================Net Element========================*/
@@ -231,8 +250,10 @@ typedef struct CPN_Transition
     string id;
     condition_tree guard;
     bool hasguard;
-    vector<CSArc>producer;
-    vector<CSArc>consumer;
+    vector<CSArc> producer;
+    vector<CSArc> consumer;
+    set<Variable> relvars;
+    vector<Variable> relvararray;
 } CTransition;
 
 typedef struct CPN_Arc
@@ -267,9 +288,13 @@ public:
     void getSize(char *filename);
     void readPNML(char *filename);
     void getInitMarking(TiXmlElement *initMarking,CPlace &pp,int i);
+    void getRelVars();
+    void TraArcTreeforVAR(meta *expnode,set<Variable> &relvars);
     void printCPN();
     void printSort();
     void printVar();
+    void printTransVar();
+    void setGlobalVar();
     ~CPN();
 private:
 };

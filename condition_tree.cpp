@@ -219,7 +219,7 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
     else if(value == "tuple") {
         curnode = new meta;
         curnode->myname = "tuple";
-        curnode->mytype = arcnodetype ::delsort;
+        curnode->mytype = arcnodetype ::structure;
 
         TiXmlElement *term = elem->FirstChildElement();
         build_step(term,curnode->leftnode);
@@ -234,7 +234,7 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
             build_step(term,prese);
             meta *tt = new meta;
             tt->myname = "tuple";
-            tt->mytype = arcnodetype ::delsort;
+            tt->mytype = arcnodetype ::structure;
             tt->leftnode = prede->rightnode;
             tt->rightnode = prese;
             prede->rightnode = tt;
@@ -250,7 +250,11 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
         TiXmlElement *term = elem->FirstChildElement();
         build_step(term,curnode->leftnode);
         term = term->NextSiblingElement();
-        build_step(term,curnode->rightnode);
+        if(term!=NULL)
+        {
+            build_step(term,curnode->rightnode);
+        }
+        else return;
         term = term->NextSiblingElement();
 
         meta *prese,*prede;
@@ -268,6 +272,31 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
             term=term->NextSiblingElement();
         }
     }
+    else if(value == "subtract") {
+        curnode = new meta;
+        curnode->myname = "subtract";
+        curnode->mytype = operat;
+        TiXmlElement *term=elem->FirstChildElement();
+        build_step(term,curnode->leftnode);
+        term = term->NextSiblingElement();
+        build_step(term,curnode->rightnode);
+
+        term = term->NextSiblingElement();
+        meta *prese,*prede;
+        prede = curnode;
+        while(term)
+        {
+            build_step(term,prese);
+            meta *aa = new meta;
+            aa->myname = "add";
+            aa->mytype = operat;
+            aa->leftnode = prede->rightnode;
+            aa->rightnode = prese;
+            prede->rightnode = aa;
+            prede = aa;
+            term = term->NextSiblingElement();
+        }
+    }
     else if(value == "successor") {
         curnode = new meta;
         curnode->mytype = operat;
@@ -282,6 +311,13 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
         TiXmlElement *leftchild = elem->FirstChildElement();
         build_step(leftchild,curnode->leftnode);
     }
+    else if(value == "all") {
+        curnode = new meta;
+        curnode->mytype = operat;
+        curnode->myname = "all";
+        TiXmlElement *leftchild = elem->FirstChildElement();
+        build_step(leftchild,curnode->leftnode);
+    }
     else if(value == "variable") {
         curnode = new meta;
         curnode->mytype = var;
@@ -293,6 +329,11 @@ void arc_expression::build_step(TiXmlElement *elem, meta *&curnode) {
         curnode->mytype = delsort;
         TiXmlAttribute *declaration = elem->FirstAttribute();
         curnode->myname = declaration->Value();
+    }
+    else if(value == "usersort") {
+        curnode = new meta;
+        curnode->mytype = sortclass;
+        curnode->myname = elem->FirstAttribute()->Value();
     }
     else if(value == "dotconstant") {
         curnode = new meta;
@@ -339,7 +380,12 @@ void arc_expression::computeEXP(meta *node) {
     }
     else if(node->mytype == operat)
     {
-        if(node->myname == "successor")
+        if(node->myname == "all")
+        {
+            computeEXP(node->leftnode);
+            node->myexp = "["+node->leftnode->myexp+"].all";
+        }
+        else if(node->myname == "successor")
         {
             computeEXP(node->leftnode);
             node->myexp = node->leftnode->myexp+"++";
@@ -352,11 +398,26 @@ void arc_expression::computeEXP(meta *node) {
         else if(node->myname == "add")
         {
             computeEXP(node->leftnode);
+            if(node->rightnode!=NULL)
+            {
+                computeEXP(node->rightnode);
+                node->myexp = node->leftnode->myexp+"+"+node->rightnode->myexp;
+            }
+            else
+                node->myexp = node->leftnode->myexp;
+        }
+        else if(node->myname == "subtract")
+        {
+            computeEXP(node->leftnode);
             computeEXP(node->rightnode);
-            node->myexp = node->leftnode->myexp+"+"+node->rightnode->myexp;
+            node->myexp = node->leftnode->myexp+"-("+node->rightnode->myexp+")";
         }
     }
     else if(node->mytype == delsort)
+    {
+        node->myexp = node->myname;
+    }
+    else if(node->mytype == sortclass)
     {
         node->myexp = node->myname;
     }
@@ -369,17 +430,4 @@ void arc_expression::computeEXP(meta *node) {
 void arc_expression::printEXP(string &str) {
     computeEXP(root->leftnode);
     str = root->leftnode->myexp;
-}
-
-void arc_expression::initiate(meta *node) {
-    if(node->mytype == var)
-    {
-        node->bindptr = 0;
-        node->number = -1;
-    }
-    if(node->leftnode!=NULL)
-        initiate(node->leftnode);
-    if(node->rightnode!=NULL)
-        initiate(node->rightnode);
-
 }
